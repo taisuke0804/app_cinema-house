@@ -10,14 +10,31 @@
   <!-- ヘッダー -->
   <nav class="navbar navbar-expand-lg bg-secondary navbar-dark">
     <div class="container-fluid">
-      <a class="navbar-brand text-white" href="{{ route('index') }}">CINEMA-HOUSE</a>
+      <!-- サイトタイトル -->
+      <a class="navbar-brand text-white" href="/home">CINEMA-HOUSE</a>
+
+      <!-- トグルボタン（レスポンシブ対応） -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
+      <!-- ユーザー情報とログアウトボタン -->
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
-            <a class="btn btn-outline-light" href="{{ route('login') }}">ログイン</a>
+            <span class="navbar-text text-white me-3">
+              <!-- ログインしたユーザー名を表示 -->
+              ようこそ、<strong>ユーザー名</strong>さん
+            </span>
+          </li>
+          <li class="nav-item">
+            <!-- <a class="btn btn-outline-light" href="/logout">ログアウト</a> -->
+            <a class="btn btn-outline-light" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+              ログアウト
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+            </form>
           </li>
         </ul>
       </div>
