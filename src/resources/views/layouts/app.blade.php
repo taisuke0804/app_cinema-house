@@ -24,7 +24,7 @@
           <li class="nav-item">
             <span class="navbar-text text-white me-3">
               <!-- ログインしたユーザー名を表示 -->
-              ようこそ、<strong>ユーザー名</strong>さん
+              ようこそ、<strong>{{ Auth::user()->name }}</strong>さん
             </span>
           </li>
           <li class="nav-item">
