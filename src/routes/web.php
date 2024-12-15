@@ -2,14 +2,26 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AdminLoginController;
 
 Route::get('/', function () {
     return view('index');
 })->name('index');
 
-// Auth::routes();
+
+/**
+ * ユーザー認証関連のルート
+ * Laravel標準のAuth::routes()を使用せず、ログイン・ログアウト処理をカスタマイズ
+ */
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/**
+ * 管理者認証関連のルート
+ * 管理者専用のログイン処理を設定
+ */
+Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
