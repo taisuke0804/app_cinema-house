@@ -17,17 +17,47 @@
             <h4>管理者ログイン</h4>
           </div>
           <div class="card-body">
-            <form method="POST" action="index.html">
+
+            <!-- バリデーションエラーの表示 -->
+            @if ($errors->any())
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            @endif
+            <!-- /バリデーションエラーの表示 -->
+
+            <form method="POST" action="{{ route('admin.login.post') }}">
               @csrf
               <!-- メールアドレス -->
               <div class="mb-3">
                 <label for="email" class="form-label">メールアドレス</label>
-                <input type="email" class="form-control border-info" id="email" name="email" placeholder="メールアドレスを入力">
+                <input 
+                  type="email" 
+                  class="form-control @error('email') is-invalid @enderror" 
+                  id="email" 
+                  name="email" 
+                  value="{{ old('email') }}" 
+                  placeholder="メールアドレスを入力">
+                @error('email')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
               </div>
               <!-- パスワード -->
               <div class="mb-3">
                 <label for="password" class="form-label">パスワード</label>
-                <input type="password" class="form-control border-info" id="password" name="password" placeholder="パスワードを入力">
+                <input 
+                  type="password" 
+                  class="form-control @error('password') is-invalid @enderror" 
+                  id="password" 
+                  name="password" 
+                  placeholder="パスワードを入力">
+                @error('password')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
               </div>
               <!-- 送信ボタン -->
               <div class="d-grid">
@@ -40,5 +70,6 @@
     </div>
   </div>
   <!-- /管理者ログインフォーム -->
+
 </body>
 </html>

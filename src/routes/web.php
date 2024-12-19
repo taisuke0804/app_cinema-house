@@ -25,3 +25,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
  * 管理者専用のログイン処理を設定
  */
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login.post');
+Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+Route::get('/admin', function () {
+    return view('admin.index');
+})->middleware('auth:admin')->name('admin.index');
