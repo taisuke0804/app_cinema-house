@@ -22,9 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // 認証済みユーザーを特定のページへリダイレクトさせる設定
         $middleware->redirectUsersTo(function () {
-            if(Auth::guard('admin')) {
+            if(Auth::guard('admin')->check()) {
                 return route('admin.index');
-            }elseif(Auth::guard('web')) {
+            }elseif(Auth::guard('web')->check()) {
                 return route('home');
             }
         });
