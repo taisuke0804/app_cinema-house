@@ -127,9 +127,16 @@ return [
     |
     */
 
+    // 通常のセッションに使用するクッキー名
     'cookie' => env(
         'SESSION_COOKIE',
         Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+    ),
+
+    // 管理者用セッションに使用するクッキー名
+    'cookie_admin' => env(
+        'SESSION_COOKIE_ADMIN',
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_session_admin'
     ),
 
     /*
