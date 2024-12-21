@@ -32,5 +32,9 @@ class DevelopmentSeeder extends Seeder
             'email' => 'test@gmail.com',
             'password' => Hash::make('1111aaaa'),
         ]);
+
+        $this->call([
+            MovieSeeder::class,
+        ]);
     }
 }
