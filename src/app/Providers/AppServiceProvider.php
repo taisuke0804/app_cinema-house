@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
         if (request()->is('admin*')) {
             config(['session.cookie' => config('session.cookie_admin')]); 
         }
+
+        Paginator::useBootstrapFive();
     }
 }

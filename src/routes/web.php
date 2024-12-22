@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminLoginController;
+use App\Http\Controllers\Admin\MovieController;
 
 Route::get('/', function () {
     return view('index');
@@ -32,6 +33,7 @@ Route::get('/admin', function () {
     return view('admin.index');
 })->middleware('auth:admin')->name('admin.index');
 
-Route::get('admin/movies/', function () {
-    return view('admin.movies.index');
-})->middleware('auth:admin')->name('admin.movies.index');
+Route::controller(MovieController::class)->prefix('admin')->name('admin.')
+    ->middleware('auth:admin')->group(function () {
+        Route::get('movies/', 'index')->name('movies.index');
+});

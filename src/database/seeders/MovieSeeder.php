@@ -31,6 +31,6 @@ class MovieSeeder extends Seeder
             'release_date' => '2024-11-15',
         ]);
 
-        Movie::factory()->count(10)->create();
+        Movie::factory()->count(50)->create();
     }
 }
