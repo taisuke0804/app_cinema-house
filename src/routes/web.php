@@ -31,3 +31,7 @@ Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('adm
 Route::get('/admin', function () {
     return view('admin.index');
 })->middleware('auth:admin')->name('admin.index');
+
+Route::get('admin/movies/', function () {
+    return view('admin.movies.index');
+})->middleware('auth:admin')->name('admin.movies.index');
