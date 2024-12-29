@@ -42,4 +42,7 @@ Route::controller(MovieController::class)->prefix('admin')->name('admin.')
 Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')
     ->middleware('auth:admin')->group(function () {
         Route::get('screenings/calendar', 'index')->name('screenings.calendar.index');
+
+        // カレンダーイベントの取得API
+        Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
 });
