@@ -36,11 +36,20 @@ class ScreeningCalendarController extends Controller
                 'end' => $screening->end_time->format('Y-m-d'),
                 'start_time' => $screening->start_time->format('H:i'),
                 'end_time' => $screening->end_time->format('H:i'),
+                'url' => route('admin.screenings.show', $screening),
             ];
         });
 
         $events = $screenings->toArray();
 
         return response()->json($events);
+    }
+
+    /**
+     * 上映スケジュールの詳細情報を表示するページ
+     */
+    public function show(Screening $screening)
+    {
+        return view('admin.screenings.show')->with('screening', $screening);
     }
 }
