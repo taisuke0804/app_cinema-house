@@ -21,7 +21,8 @@ class ScreeningFactory extends Factory
         $end = (clone $start)->modify('+2 hours');
 
         return [
-            'movie_id' => Movie::factory(),
+            // moviesテーブルの既存のmovie_idをランダムに取得
+            'movie_id' => Movie::query()->inRandomOrder()->value('id'),
             'start_time' => $start,
             'end_time' => $end,
         ];
