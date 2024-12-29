@@ -19,7 +19,13 @@
                 <span>管理者TOP</span>
             </a>
             <!-- 映画一覧リンク -->
-            <a href="{{ route('admin.movies.index') }}" class="nav-link text-light">映画一覧</a>
+            <a href="{{ route('admin.movies.index') }}" class="nav-link text-light ms-4">
+              映画一覧
+            </a>
+            <!-- 上映カレンダー -->
+            <a href="{{ route('admin.screenings.calendar.index') }}" class="nav-link text-light ms-4">
+              上映カレンダー
+            </a>
         </div>
 
         <!-- ヘッダーの右側部分 -->
