@@ -15,6 +15,17 @@ class Screening extends Model
         'end_time',
     ];
 
+    /**
+     * キャスト定義
+     */
+    protected function casts(): array
+    {
+        return [
+            'start_time' => 'datetime', // 日時型へのキャスト
+            'end_time' => 'datetime', // 日時型へのキャスト
+        ];
+    }
+
     public function movie()
     {
         return $this->belongsTo(Movie::class);

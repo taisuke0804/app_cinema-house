@@ -15,16 +15,39 @@ class ScreeningFactory extends Factory
 
     public function definition(): array
     {
-        // DateTimeオブジェクトを複製してから2時間後に変更
-        // DateTime::modify() メソッドは、日時を相対的に変更できるメソッド
-        $start = fake()->dateTimeBetween('now', '+1 month');
-        $end = (clone $start)->modify('+2 hours');
+        // 重複しない時間を生成するメソッド
+        $startAndEnd = $this->generateNonOverlappingTimes();
 
         return [
             // moviesテーブルの既存のmovie_idをランダムに取得
             'movie_id' => Movie::query()->inRandomOrder()->value('id'),
-            'start_time' => $start,
-            'end_time' => $end,
+            'start_time' => $startAndEnd['start_time'],
+            'end_time' => $startAndEnd['end_time'],
+        ];
+    }
+
+    private function generateNonOverlappingTimes(): array
+    {
+        do {
+            $hours = fake()->numberBetween(9, 21);
+            $minutes = fake()->randomElement([0, 15, 30, 45]);
+            $startDate = fake()->dateTimeBetween('now', '+3 month');
+            $startDate = $startDate->setTime($hours, $minutes, 0); // 時間を設定
+
+            // DateTimeオブジェクトを複製してから2時間後に変更
+            // DateTime::modify() メソッドは、日時を相対的に変更できるメソッド
+            $endDate = (clone $startDate)->modify('+2 hours');
+            
+            // 重複するスケジュールが存在するかチェック
+            $overlapping = Screening::where('start_time', '<', $endDate)
+                ->where('end_time', '>', $startDate)
+                ->exists();
+
+        } while ($overlapping);
+
+        return [
+            'start_time' => $startDate,
+            'end_time' => $endDate,
         ];
     }
 }

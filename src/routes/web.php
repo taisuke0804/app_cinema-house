@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\Admin\MovieController;
+use App\Http\Controllers\Admin\ScreeningCalendarController;
 
 Route::get('/', function () {
     return view('index');
@@ -36,4 +37,15 @@ Route::get('/admin', function () {
 Route::controller(MovieController::class)->prefix('admin')->name('admin.')
     ->middleware('auth:admin')->group(function () {
         Route::get('movies/', 'index')->name('movies.index');
+});
+
+Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')
+    ->middleware('auth:admin')->group(function () {
+        Route::get('screenings/calendar', 'index')->name('screenings.calendar.index');
+
+        // カレンダーイベントの取得API
+        Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
+
+        // 上映スケジュールの詳細ページ
+        Route::get('screenings/{screening}', 'show')->name('screenings.show');
 });

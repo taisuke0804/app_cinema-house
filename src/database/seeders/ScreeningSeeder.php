@@ -13,6 +13,6 @@ class ScreeningSeeder extends Seeder
      */
     public function run(): void
     {
-        Screening::factory()->count(10)->create();
+        Screening::factory()->count(20)->create();
     }
 }
