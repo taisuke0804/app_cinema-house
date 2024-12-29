@@ -34,6 +34,8 @@ class ScreeningCalendarController extends Controller
                 'title' => $screening->movie->title,
                 'start' => $screening->start_time->format('Y-m-d'),
                 'end' => $screening->end_time->format('Y-m-d'),
+                'start_time' => $screening->start_time->format('H:i'),
+                'end_time' => $screening->end_time->format('H:i'),
             ];
         });
 
