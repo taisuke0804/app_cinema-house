@@ -43,7 +43,7 @@
 </nav>
 
   <!-- コンテンツ部分 -->
-  <main class="container my-4">
+  <main class="container mt-4 mb-5">
     @yield('content')
   </main>
 
