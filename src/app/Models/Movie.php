@@ -14,4 +14,9 @@ class Movie extends Model
         'description',
         'release_date',
     ];
+
+    public function screenings()
+    {
+        return $this->hasMany(Screening::class);
+    }
 }
