@@ -15,7 +15,7 @@ class DevelopmentSeeder extends Seeder
     public function run(): void
     {
         Admin::factory()->create([
-            'name' => '管理者テスト',
+            'name' => '管理者太郎',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin1234'),
