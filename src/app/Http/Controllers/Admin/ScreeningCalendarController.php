@@ -50,7 +50,11 @@ class ScreeningCalendarController extends Controller
      */
     public function show(Screening $screening)
     {
-        $screening = Screening::with('movie')->findOrFail($screening->id);
+        $screening = Screening::with([
+            'movie:id,title',
+            'seats:id,screening_id,row,number,is_reserved',
+        ])->select('id', 'movie_id', 'start_time', 'end_time')
+        ->findOrFail($screening->id);
         
         return view('admin.screenings.show')->with('screening', $screening);
     }
