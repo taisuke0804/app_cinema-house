@@ -26,6 +26,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::controller(UserCalendarController::class)->prefix('user')->name('user.')
     ->middleware('auth')->group(function () {
         Route::get('screenings/calendar', 'index')->name('screenings.calendar.index');
+
+        // カレンダーイベントの取得API
+        Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
 });
 
 // ------------------------------------------------------------------------------------------------
