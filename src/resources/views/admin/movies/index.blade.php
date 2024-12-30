@@ -9,7 +9,7 @@
     <thead>
       <tr>
         <th class="col-4" style="width: 400px;">タイトル</th>
-        <th>公開日</th>
+        <th>ジャンル</th>
         <th>説明文</th>
         <th>詳細</th>
       </tr>
@@ -18,7 +18,7 @@
       @foreach ($movies as $movie)
       <tr>
         <td class="text-wrap" style="max-width: 400px;">{{ $movie->title }}</td>
-        <td>{{ $movie->release_date }}</td>
+        <td>{{ $movie->genre->getLabel() }}</td>
         <td class="text-truncate" style="max-width: 300px;">{{ $movie->description }}</td>
         <td><a href="#" class="btn btn-primary btn-sm">詳細</a></td>
       </tr>

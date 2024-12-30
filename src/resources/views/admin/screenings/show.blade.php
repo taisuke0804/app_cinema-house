@@ -11,6 +11,7 @@
   <div class="card-body">
     <h5 class="card-title fs-3">映画タイトル: 『 {{ $screening->movie->title }} 』</h5>
     <p class="card-text">
+      <strong>ジャンル:</strong> {{ $screening->movie->genre->getLabel() }}<br>
       <strong>上映日:</strong> {{ $screening->start_time->format('Y年m月d日') }}<br>
       <strong>上映開始時刻:</strong> {{ $screening->start_time->format('H:i') }}<br>
       <strong>上映終了時刻:</strong> {{ $screening->end_time->format('H:i') }}
