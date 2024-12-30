@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('screening_id')->constrained()->onDelete('cascade');
             $table->string('row'); // 列 (例: A, B, C)
-            $table->string('number'); // 番号 (例: 1, 2, 3)
+            $table->integer('number'); // 番号 (例: 1, 2, 3)
             $table->boolean('is_reserved')->default(false); // 予約済みかどうか
             $table->timestamps();
+
+            // 複合ユニークキーを設定
+            $table->unique(['screening_id', 'row', 'number']);
         });
     }
 

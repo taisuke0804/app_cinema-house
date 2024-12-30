@@ -13,6 +13,9 @@ class ScreeningSeeder extends Seeder
      */
     public function run(): void
     {
-        Screening::factory()->count(20)->create();
+        // 重複する上映スケジュールが生成される可能性があるため、for文を利用して20件生成する
+        for ($i = 0; $i < 20; $i++) {
+            Screening::factory()->create();
+        }
     }
 }
