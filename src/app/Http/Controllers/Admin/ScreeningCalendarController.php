@@ -50,6 +50,8 @@ class ScreeningCalendarController extends Controller
      */
     public function show(Screening $screening)
     {
+        $screening = Screening::with('movie')->findOrFail($screening->id);
+        
         return view('admin.screenings.show')->with('screening', $screening);
     }
 }
