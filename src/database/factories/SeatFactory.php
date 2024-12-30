@@ -37,7 +37,7 @@ class SeatFactory extends Factory
             'screening_id' => $screeningId,
             'row' => $row,
             'number' => $number,
-            'is_reserved' => fake()->boolean(20), // 20%の確率でtrue
+            'is_reserved' => fake()->boolean(90), // 90%の確率でtrue
         ];
     }
 }
