@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\Admin\MovieController;
-use App\Http\Controllers\Admin\ScreeningCalendarController;
+use App\Http\Controllers\Admin\ScreeningCalendarController as ScreeningCalendarController;
+use App\Http\Controllers\User\ScreeningCalendarController as UserCalendarController;
 
 Route::get('/', function () {
     return view('index');
@@ -22,6 +23,12 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::controller(UserCalendarController::class)->prefix('user')->name('user.')
+    ->middleware('auth')->group(function () {
+        Route::get('screenings/calendar', 'index')->name('screenings.calendar.index');
+});
+
+// ------------------------------------------------------------------------------------------------
 /**
  * 管理者認証関連のルート
  * 管理者専用のログイン処理を設定
