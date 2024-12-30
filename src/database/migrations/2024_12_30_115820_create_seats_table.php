@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('screening_id')->constrained()->onDelete('cascade');
-            $table->string('row_seat'); // 列 (例: A, B, C)
-            $table->string('number_seat'); // 番号 (例: 1, 2, 3)
+            $table->string('row'); // 列 (例: A, B, C)
+            $table->string('number'); // 番号 (例: 1, 2, 3)
             $table->boolean('is_reserved')->default(false); // 予約済みかどうか
             $table->timestamps();
         });
