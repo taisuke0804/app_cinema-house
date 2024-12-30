@@ -14,7 +14,7 @@ class MovieController extends Controller
      */
     public function index(): View
     {
-        $movies = Movie::select('title', 'description', 'release_date')->paginate(10);
+        $movies = Movie::select('title', 'description', 'genre')->paginate(10);
         
         return view('admin.movies.index')->with(['movies' => $movies]);
     }

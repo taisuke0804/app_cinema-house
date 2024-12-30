@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('title', 100)->comment('映画のタイトル');
+            $table->unsignedTinyInteger('genre')->comment('ジャンル'); 
             $table->text('description')->nullable()->comment('映画の説明');
-            $table->date('release_date')->comment('上映日');
             $table->timestamps();
         });
     }
