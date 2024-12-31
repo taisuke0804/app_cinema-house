@@ -21,7 +21,8 @@ return new class extends Migration
             $table->timestamps();
 
             // 複合ユニークキーを設定
-            $table->unique(['screening_id', 'user_id', 'row', 'number']);
+            $table->unique(['screening_id', 'row', 'number']);
+            $table->unique(['screening_id', 'user_id']);
         });
     }
 

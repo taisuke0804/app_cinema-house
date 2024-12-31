@@ -36,7 +36,8 @@ Route::controller(UserCalendarController::class)->prefix('user')->name('user.')
 
 Route::controller(SeatController::class)->prefix('user')->name('user.')
     ->middleware('auth')->group(function () {
-        Route::post('/seat/reserve', [SeatController::class, 'reserve'])->name('seat.reserve');
+        Route::post('/seat/reserve', 'reserve')->name('seat.reserve');
+        Route::get('/seat/reserve/completed', 'completed')->name('seat.reserve.completed');
 });
 
 // ------------------------------------------------------------------------------------------------

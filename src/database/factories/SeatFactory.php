@@ -28,13 +28,17 @@ class SeatFactory extends Factory
             $userId = User::query()->inRandomOrder()->value('id');
 
             // 重複する座席が存在するかチェック
-            $overlapping = Seat::where('screening_id', $screeningId)
-                ->where('user_id', $userId)
+            $overlappingSeat = Seat::where('screening_id', $screeningId)
                 ->where('row', $row)
                 ->where('number', $number)
                 ->exists();
 
-        } while ($overlapping);
+            // screening_idとuser_idの組み合わせが重複しているかチェック
+            $overlappingUser = Seat::where('screening_id', $screeningId)
+                ->where('user_id', $userId)
+                ->exists();
+
+        } while ($overlappingSeat || $overlappingUser);
 
         return [
             'screening_id' => $screeningId,

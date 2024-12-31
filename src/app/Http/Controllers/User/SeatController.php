@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\Seat;
 
 class SeatController extends Controller
 {
@@ -12,6 +14,53 @@ class SeatController extends Controller
      */
     public function reserve(Request $request)
     {
-        dump($request->all());
+        // 入力データの検証
+        $validated = $request->validate([
+            'row' => ['required', 'string', Rule::in(['A', 'B']), 'max:1'],
+            'number' => ['required', 'integer', 'between:1,10'],
+            'screening_id' => ['required', 'integer', 'exists:screenings,id'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+        ]);
+
+        // 同一のuser_idで予約済みか確認
+        $reservedSeat = Seat::where('screening_id', $validated['screening_id'])
+            ->where('user_id', $validated['user_id'])
+            ->first();
+        if ($reservedSeat) {
+            return redirect()->back()->with('error', 'すでに予約済みです。');
+        }
+
+        // すでに予約済みか確認
+        $seat = Seat::where('screening_id', $validated['screening_id'])
+            ->where('row', $validated['row'])
+            ->where('number', $validated['number'])
+            ->first();
+
+        if ($seat) {
+            if ($seat->is_reserved) {
+                return redirect()->back()->with('error', 'この座席はすでに予約されています。');
+            }
+            $seat->user_id = $validated['user_id'];
+            $seat->is_reserved = true;
+            $seat->save();
+        } else {
+            Seat::create([
+                'row' => $validated['row'],
+                'number' => $validated['number'],
+                'screening_id' => $validated['screening_id'],
+                'user_id' => $validated['user_id'],
+                'is_reserved' => true,
+            ]);
+        }
+
+        // 成功した場合、完了画面にリダイレクト
+        return redirect()->route('user.seat.reserve.completed')
+            ->with('success', '座席予約が完了しました！');
+    }
+
+    public function completed()
+    {
+        $successMessage = session('success', '座席予約が完了しました！');
+        return view('user.seat.reserve_completed', compact('successMessage'));
     }
 }
