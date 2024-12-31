@@ -60,7 +60,7 @@
       <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <form method="POST" action="{{ route('user.seat.reserve', ['screening' => $screening->id]) }}">
+            <form method="POST" action="{{ route('user.seat.reserve', ['screening_id' => $screening->id]) }}">
               @csrf
               <div class="modal-header">
                 <h5 class="modal-title" id="reserveModalLabel">座席予約確認</h5>
@@ -68,6 +68,7 @@
               </div>
               <div class="modal-body">
                 <p id="modal-selected-seat">選択した座席: なし</p>
+                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 <input type="hidden" name="row" id="modal-row">
                 <input type="hidden" name="number" id="modal-number">
               </div>
