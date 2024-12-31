@@ -33,6 +33,8 @@ class DevelopmentSeeder extends Seeder
             'password' => Hash::make('1111aaaa'),
         ]);
 
+        User::factory()->count(50)->create();
+
         $this->call([
             MovieSeeder::class,
             ScreeningSeeder::class,

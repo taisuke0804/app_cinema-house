@@ -11,6 +11,7 @@ class Seat extends Model
 
     protected $fillable = [
         'screening_id',
+        'user_id',
         'row',
         'number',
         'is_reserved',
@@ -19,5 +20,10 @@ class Seat extends Model
     public function screening()
     {
         return $this->belongsTo(Screening::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

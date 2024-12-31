@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Screening;
+use App\Models\Seat;
+use Illuminate\Support\Facades\Auth;
 
 class ScreeningCalendarController extends Controller
 {
@@ -55,7 +57,20 @@ class ScreeningCalendarController extends Controller
             'seats:id,screening_id,row,number,is_reserved',
         ])->select('id', 'movie_id', 'start_time', 'end_time')
         ->findOrFail($screening->id);
+
+        // ログインユーザーが予約済みの座席を取得
+        $authReservedSeat = Seat::where('screening_id', $screening->id)
+            ->where('user_id', Auth::guard('web')->id())
+            ->where('is_reserved', true)
+            ->first();
         
-        return view('user.screenings.show')->with('screening', $screening);
+        // ログインユーザーが予約済みかどうか
+        $authAlreadyReserved = $authReservedSeat ? true : false;
+        
+        return view('user.screenings.show')->with([
+            'screening' => $screening,
+            'authAlreadyReserved' => $authAlreadyReserved,
+            'authReservedSeat' => $authReservedSeat,
+        ]);
     }
 }
