@@ -36,12 +36,26 @@ class ScreeningCalendarController extends Controller
                 'end' => $screening->end_time->format('Y-m-d'),
                 'start_time' => $screening->start_time->format('H:i'),
                 'end_time' => $screening->end_time->format('H:i'),
-                // 'url' => route('admin.screenings.show', $screening),
+                'url' => route('user.screenings.show', $screening),
             ];
         });
 
         $events = $screenings->toArray();
 
         return response()->json($events);
+    }
+
+    /**
+     * 上映スケジュールの詳細情報を表示するページ
+     */
+    public function show(Screening $screening)
+    {
+        $screening = Screening::with([
+            'movie:id,title,genre',
+            'seats:id,screening_id,row,number,is_reserved',
+        ])->select('id', 'movie_id', 'start_time', 'end_time')
+        ->findOrFail($screening->id);
+        
+        return view('user.screenings.show')->with('screening', $screening);
     }
 }
