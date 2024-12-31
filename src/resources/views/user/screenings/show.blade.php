@@ -17,10 +17,28 @@
       <strong>上映終了時刻:</strong> {{ $screening->end_time->format('H:i') }}
     </p>
 
+    <!-- バリデーションエラーの表示 -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <!-- ユーザーが予約済みの場合の警告 -->
+    @if ($authAlreadyReserved)
+        <div class="alert alert-info">
+            <p>あなたの予約済み座席: {{ $authReservedSeat->row }}{{ $authReservedSeat->number }}</p>
+        </div>
+    @endif
+
     <!-- 席予約状況 -->
     <hr>
     <h5>座席予約状況</h5>
-    <p class="text-muted">緑色: 空き / 灰色: 予約済み / 青色: 選択中</p>
+    <p class="text-muted">緑色: 空き / 灰色: 他人の予約 / 青色: 自分の予約</p>
     <div class="d-flex flex-column align-items-start">
       @foreach (range('A', 'B') as $row)
         <div class="d-flex align-items-center mb-2">
@@ -31,9 +49,25 @@
               @php
                 $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
                 $isReserved = $seat->is_reserved ?? 0;
+                
+                if ($isReserved) {
+                    $seatColor = 'bg-secondary';
+                    $clickable = 'not-allowed';
+                } else {
+                    $seatColor = 'bg-success';
+                    $clickable = 'clickable';
+                }
+                
+                if ($authAlreadyReserved) {
+                    $clickable = 'not-allowed';
+                    if ($authReservedSeat->row === $row && $authReservedSeat->number === $number) {
+                        $seatColor = 'bg-primary';
+                    }
+                }
+                
               @endphp
               <div 
-                class="seat {{ $isReserved ? 'bg-secondary not-allowed' : 'bg-success clickable' }} 
+                class="seat {{ $seatColor }} {{ $clickable }}
                 text-white me-3 d-flex justify-content-center align-items-center"
                 data-row="{{ $row }}"
                 data-number="{{ $number }}"
@@ -106,6 +140,7 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+@if (!$authAlreadyReserved)
 <script>
   $(document).ready(function () {
     $('.seat.bg-success').on('click', function () {
@@ -143,5 +178,5 @@
     });
   });
 </script>
-
+@endif
 @endsection

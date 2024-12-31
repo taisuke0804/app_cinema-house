@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Seat;
+use Illuminate\Support\Facades\Validator;
 
 class SeatController extends Controller
 {
@@ -14,20 +15,22 @@ class SeatController extends Controller
      */
     public function reserve(Request $request)
     {
-        // 入力データの検証
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'row' => ['required', 'string', Rule::in(['A', 'B']), 'max:1'],
             'number' => ['required', 'integer', 'between:1,10'],
             'screening_id' => ['required', 'integer', 'exists:screenings,id'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
         ]);
 
+        $validated = $validator->validate();
+
         // 同一のuser_idで予約済みか確認
         $reservedSeat = Seat::where('screening_id', $validated['screening_id'])
             ->where('user_id', $validated['user_id'])
             ->first();
         if ($reservedSeat) {
-            return redirect()->back()->with('error', 'すでに予約済みです。');
+            $validator->errors()->add('seat', 'お客様はすでに予約済みです。');
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         // すでに予約済みか確認
@@ -38,7 +41,8 @@ class SeatController extends Controller
 
         if ($seat) {
             if ($seat->is_reserved) {
-                return redirect()->back()->with('error', 'この座席はすでに予約されています。');
+                $validator->errors()->add('seat', '選択された座席はすでに予約済みです。');
+                return redirect()->back()->withErrors($validator)->withInput();
             }
             $seat->user_id = $validated['user_id'];
             $seat->is_reserved = true;
