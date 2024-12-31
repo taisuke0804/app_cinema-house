@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\ScreeningCalendarController as ScreeningCalendarController;
 use App\Http\Controllers\User\ScreeningCalendarController as UserCalendarController;
+use App\Http\Controllers\User\SeatController;
 
 Route::get('/', function () {
     return view('index');
@@ -31,6 +32,11 @@ Route::controller(UserCalendarController::class)->prefix('user')->name('user.')
         Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
         // 上映スケジュールの詳細ページ
         Route::get('screenings/{screening}', 'show')->name('screenings.show');
+});
+
+Route::controller(SeatController::class)->prefix('user')->name('user.')
+    ->middleware('auth')->group(function () {
+        Route::post('/seat/reserve', [SeatController::class, 'reserve'])->name('seat.reserve');
 });
 
 // ------------------------------------------------------------------------------------------------

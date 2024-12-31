@@ -52,8 +52,33 @@
       <h5>選択した座席情報</h5>
       <p id="selected-seat" class="text-muted">座席が選択されていません。</p>
 
-      <!-- 予約するボタン -->
-      <button id="reserve-button" class="btn btn-primary mt-3" disabled>予約する</button>
+      <button id="reserve-button" class="btn btn-primary mt-3" disabled data-bs-toggle="modal" data-bs-target="#reserveModal">
+        予約する
+      </button>
+
+      <!-- 予約確認モーダル -->
+      <div class="modal fade" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form method="POST" action="{{ route('user.seat.reserve', ['screening' => $screening->id]) }}">
+              @csrf
+              <div class="modal-header">
+                <h5 class="modal-title" id="reserveModalLabel">座席予約確認</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p id="modal-selected-seat">選択した座席: なし</p>
+                <input type="hidden" name="row" id="modal-row">
+                <input type="hidden" name="number" id="modal-number">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="submit" class="btn btn-primary">予約する</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -107,6 +132,11 @@
         const number = $seat.data('number');
         $('#selected-seat').text(`選択した座席: ${row}${number}`);
         $('#reserve-button').prop('disabled', false); // ボタンを有効化
+
+        // モーダルに選択情報を設定
+        $('#modal-selected-seat').text(`選択した座席: ${row}${number}`);
+        $('#modal-row').val(row);
+        $('#modal-number').val(number);
       }
 
     });
