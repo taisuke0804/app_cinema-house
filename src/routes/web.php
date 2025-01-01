@@ -38,6 +38,7 @@ Route::controller(SeatController::class)->prefix('user')->name('user.')
     ->middleware('auth')->group(function () {
         Route::post('/seat/reserve', 'reserve')->name('seat.reserve');
         Route::get('/seat/reserve/completed', 'completed')->name('seat.reserve.completed');
+        Route::delete('/seat/cancel', 'cancel')->name('seat.cancel');
 });
 
 // ------------------------------------------------------------------------------------------------
