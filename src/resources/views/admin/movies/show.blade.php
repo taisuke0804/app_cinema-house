@@ -19,9 +19,13 @@
     </div>
   </div>
 
-  {{-- 戻るボタン --}}
-  <div class="mt-4">
+  {{-- アクションボタン --}}
+  <div class="mt-4 d-flex justify-content-between">
+    {{-- 戻るボタン --}}
     <a href="{{ route('admin.movies.index') }}" class="btn btn-secondary">映画一覧に戻る</a>
+    
+    {{-- 上映スケジュール新規登録ボタン --}}
+    <a href="{{ route('admin.screenings.create', $movie->id) }}" class="btn btn-primary">上映スケジュールを登録</a>
   </div>
 </div>
 @endsection

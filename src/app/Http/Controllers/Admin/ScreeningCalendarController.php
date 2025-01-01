@@ -5,15 +5,26 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Screening;
+use Illuminate\View\View;
+use App\Models\Movie;
 
 class ScreeningCalendarController extends Controller
 {
     /**
      * カレンダー表示ページ.
      */
-    public function index()
+    public function index(): View
     {
         return view('admin.screenings.calendar');
+    }
+
+    /**
+     * 上映スケジュールの新規登録画面を表示
+     */
+    public function create($movie_id): View
+    {
+        $movie = Movie::findOrFail($movie_id);
+        return view('admin.screenings.create')->with('movie', $movie);
     }
 
     /**
@@ -48,7 +59,7 @@ class ScreeningCalendarController extends Controller
     /**
      * 上映スケジュールの詳細情報を表示するページ
      */
-    public function show(Screening $screening)
+    public function show(Screening $screening): View
     {
         $screening = Screening::with([
             'movie:id,title,genre',
