@@ -17,9 +17,9 @@
     </div>
   @endif
 
-  <form id="schedule-form" method="POST" action="#">
+  <form id="schedule-form" method="POST" action="{{ route('admin.screenings.store') }}">
     @csrf
-
+    <input type="hidden" name="movie_id" value="{{ $movie->id }}">
     {{-- 映画タイトル --}}
     <div class="mb-3">
       <label for="movie_title" class="form-label">映画タイトル</label>
@@ -50,7 +50,7 @@
           <select class="form-select" id="start_time_minute" name="start_minute" required>
             <option value="" disabled selected>分</option>
             @for ($minute = 0; $minute < 60; $minute += 5)
-              <option value="{{ sprintf('%02d', $minute) }}">{{ sprintf('%02d', $minute) }}</option>
+              <option value="{{ $minute }}">{{ sprintf('%02d', $minute) }}</option>
             @endfor
           </select>
         </div>
@@ -73,7 +73,7 @@
           <select class="form-select" id="end_time_minute" name="end_minute" required>
             <option value="" disabled selected>分</option>
             @for ($minute = 0; $minute < 60; $minute += 5)
-              <option value="{{ sprintf('%02d', $minute) }}">{{ sprintf('%02d', $minute) }}</option>
+              <option value="{{ $minute }}">{{ sprintf('%02d', $minute) }}</option>
             @endfor
           </select>
         </div>
