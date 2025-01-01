@@ -9,7 +9,7 @@
         予約完了
     </div>
     <div class="card-body text-center">
-        <h5 class="card-title">座席予約が完了しました！</h5>
+        <h5 class="card-title">座席予約が完了しました</h5>
         <p class="card-text">{{ $successMessage }}</p>
         <a href="{{ route('home') }}" class="btn btn-primary">ホームに戻る</a>
     </div>

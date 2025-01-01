@@ -5,6 +5,26 @@
 @section('content')
 <div class="container mt-5">
   <h2 class="mb-4">座席予約一覧</h2>
+
+  {{-- 処理完了のメッセージ表示 --}}
+  @if(session('success'))
+  <div class="alert alert-success">
+    {{ session('success') }}
+  </div>
+  @endif
+
+  {{-- バリデーションエラーメッセージの表示 --}}
+  @if($errors->any())
+  <div class="alert alert-danger">
+    <ul class="mb-0">
+      @foreach($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+  @endif
+  
+  {{-- 予約がない場合のメッセージ表示 --}}
   @if($reservations->isEmpty())
   <div class="alert alert-info">
     現在、予約されている座席はありません。
@@ -28,10 +48,15 @@
         <td>{{ $reservation->screening->start_time->format('H:i') }} ～ {{ $reservation->screening->end_time->format('H:i') }}</td>
         <td>{{ $reservation->row .  strval($reservation->number) }}</td>
         <td>
-          <form action="" method="POST">
+          <form action="{{ route('user.seat.cancel') }}" method="POST">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-sm" onclick="alert('キャンセル処理は未実装です')">
+            <input type="hidden" name="seat_id" value="{{ $reservation->id }}">
+            <input type="hidden" name="screening_id" value="{{ $reservation->screening->id }}">
+            <input type="hidden" name="user_id" value="{{ Auth::guard('web')->user()->id }}">
+            <input type="hidden" name="row" value="{{ $reservation->row }}">
+            <input type="hidden" name="number" value="{{ $reservation->number }}">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="alert('予約をキャンセルしますか？');">
               キャンセル
             </button>
           </form>
