@@ -11,6 +11,15 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
 
 <div class="container mt-4">
   <h1 class="mb-4">上映カレンダー</h1>
+
+  {{-- フラッシュメッセージ --}}
+  @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+    </div>
+  @endif
+  
   <div id="calendar"></div>
 </div>
 <style>

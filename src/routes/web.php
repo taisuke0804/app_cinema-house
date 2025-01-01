@@ -71,4 +71,8 @@ Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('ad
 
         // 上映スケジュールの詳細ページ
         Route::get('screenings/{screening}', 'show')->name('screenings.show');
+
+        // 上映スケジュールの新規登録画面
+        Route::get('screening/create/{movie_id}', 'create')->name('screenings.create');
+        Route::post('screening/store', 'store')->name('screenings.store');
 });
