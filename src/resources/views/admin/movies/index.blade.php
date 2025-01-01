@@ -4,7 +4,12 @@
 
 @section('content')
 <div class="container mt-4">
-  <h1 class="mb-4">映画一覧</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">映画一覧</h1>
+    {{-- 映画新規登録ボタン --}}
+    <a href="{{ route('admin.movies.create') }}" class="btn btn-success">映画を新規登録</a>
+  </div>
+
   <table class="table table-striped">
     <thead>
       <tr>

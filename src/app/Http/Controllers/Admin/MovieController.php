@@ -18,4 +18,12 @@ class MovieController extends Controller
         
         return view('admin.movies.index')->with(['movies' => $movies]);
     }
+
+    /**
+     * 映画の新規登録画面を表示
+     */
+    public function create(): View
+    {
+        return view('admin.movies.create');
+    }
 }
