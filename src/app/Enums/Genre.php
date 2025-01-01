@@ -25,4 +25,12 @@ enum Genre: int
             self::Other => 'その他',
         };
     }
+
+    /**
+     * 全ての値を配列で取得
+     */
+    public static function values(): array
+    {
+        return array_map(fn(self $genre) => $genre->value, self::cases());
+    }
 }

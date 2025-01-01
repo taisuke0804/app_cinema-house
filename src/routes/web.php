@@ -58,6 +58,7 @@ Route::controller(MovieController::class)->prefix('admin')->name('admin.')
     ->middleware('auth:admin')->group(function () {
         Route::get('movies/', 'index')->name('movies.index');
         Route::get('movies/create', 'create')->name('movies.create');
+        Route::post('movies/store', 'store')->name('movies.store');
 });
 
 Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')

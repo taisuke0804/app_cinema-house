@@ -4,6 +4,14 @@
 
 @section('content')
 <div class="container mt-4">
+  {{-- フラッシュメッセージ --}}
+  @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="閉じる"></button>
+    </div>
+  @endif
+
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">映画一覧</h1>
     {{-- 映画新規登録ボタン --}}

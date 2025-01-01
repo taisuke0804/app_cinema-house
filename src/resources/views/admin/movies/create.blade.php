@@ -6,12 +6,22 @@
 <div class="container mt-4">
   <h1 class="mb-4">映画新規登録</h1>
 
-  {{-- 仮の送信先ルート --}}
-  <form id="movie-form" method="POST" action="#">
-    {{-- CSRF トークンは仮のため省略 --}}
+  {{-- バリデーションエラーメッセージ --}}
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  <form id="movie-form" method="POST" action="{{ route('admin.movies.store') }}">
+    @csrf
     <div class="mb-3">
       <label for="title" class="form-label">映画タイトル</label>
-      <input type="text" class="form-control" id="title" name="title" required>
+      <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" required>
     </div>
 
     <div class="mb-3">
@@ -20,7 +30,9 @@
         <option value="" disabled selected>ジャンルを選択</option>
         {{-- \App\Enums\Genre::cases() を利用 --}}
         @foreach (\App\Enums\Genre::cases() as $genre)
-          <option value="{{ $genre->value }}">{{ $genre->getLabel() }}</option>
+          <option value="{{ $genre->value }}" {{ old('genre') == $genre->value ? 'selected' : '' }}>
+            {{ $genre->getLabel() }}
+          </option>
         @endforeach
       </select>
     </div>
@@ -28,7 +40,7 @@
     <div class="mb-3">
       <label for="description" class="form-label">説明文</label>
       {{-- 高さを固定した説明文欄 --}}
-      <textarea class="form-control" id="description" name="description" style="height: 150px;" required></textarea>
+      <textarea class="form-control" id="description" name="description" style="height: 150px;" required>{{ old('description') }}</textarea>
     </div>
 
     <div class="d-flex justify-content-end">
