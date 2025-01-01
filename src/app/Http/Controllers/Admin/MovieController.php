@@ -17,7 +17,7 @@ class MovieController extends Controller
      */
     public function index(): View
     {
-        $movies = Movie::select('title', 'description', 'genre')
+        $movies = Movie::select('id', 'title', 'description', 'genre')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         
@@ -46,5 +46,16 @@ class MovieController extends Controller
         Movie::create($validated);
 
         return redirect()->route('admin.movies.index')->with('success', '映画の新規登録が完了しました');
+    }
+
+    /**
+     * 映画の詳細を表示
+     */
+    public function show($id): View
+    {
+        $movie = Movie::select('id', 'title', 'description', 'genre')
+            ->findOrFail($id);
+
+        return view('admin.movies.show')->with(['movie' => $movie]);
     }
 }

@@ -33,7 +33,7 @@
         <td class="text-wrap" style="max-width: 400px;">{{ $movie->title }}</td>
         <td>{{ $movie->genre->getLabel() }}</td>
         <td class="text-truncate" style="max-width: 300px;">{{ $movie->description }}</td>
-        <td><a href="#" class="btn btn-primary btn-sm">詳細</a></td>
+        <td><a href="{{ route('admin.movies.show', $movie->id) }}" class="btn btn-primary btn-sm">詳細</a></td>
       </tr>
       @endforeach
     </tbody>

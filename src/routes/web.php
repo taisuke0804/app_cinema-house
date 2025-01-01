@@ -59,6 +59,7 @@ Route::controller(MovieController::class)->prefix('admin')->name('admin.')
         Route::get('movies/', 'index')->name('movies.index');
         Route::get('movies/create', 'create')->name('movies.create');
         Route::post('movies/store', 'store')->name('movies.store');
+        Route::get('movies/{id}', 'show')->name('movies.show');
 });
 
 Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')
