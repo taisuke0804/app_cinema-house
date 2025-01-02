@@ -54,8 +54,8 @@ class SampleDataSeeder extends Seeder
 
         $screening = Screening::factory()->create([
             'movie_id' => $movie->id,
-            'start_time' => $today->clone()->setTime(10, 0, 0),
-            'end_time' => $today->clone()->setTime(12, 0, 0),
+            'start_time' => $today->clone()->setTime(21, 0, 0),
+            'end_time' => $today->clone()->setTime(22, 0, 0),
         ]);
 
         $seat = Seat::factory()->create([

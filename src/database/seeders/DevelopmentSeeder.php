@@ -22,8 +22,6 @@ class DevelopmentSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-        $this->call(SampleDataSeeder::class);
-
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -36,5 +34,7 @@ class DevelopmentSeeder extends Seeder
             ScreeningSeeder::class,
             SeatSeeder::class,
         ]);
+
+        $this->call(SampleDataSeeder::class);
     }
 }
