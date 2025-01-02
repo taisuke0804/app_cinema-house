@@ -27,13 +27,14 @@ class SeatController extends Controller
         // 同一のuser_idで予約済みか確認
         $reservedSeat = Seat::where('screening_id', $validated['screening_id'])
             ->where('user_id', $validated['user_id'])
+            ->where('is_reserved', true)
             ->first();
         if ($reservedSeat) {
             $validator->errors()->add('seat', 'お客様はすでに予約済みです。');
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // すでに予約済みか確認
+        // 他のユーザーがすでに予約済みか確認
         $seat = Seat::where('screening_id', $validated['screening_id'])
             ->where('row', $validated['row'])
             ->where('number', $validated['number'])

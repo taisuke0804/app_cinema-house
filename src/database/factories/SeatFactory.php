@@ -3,9 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Screening;
 use App\Models\Seat;
-use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Seat>
@@ -16,36 +14,11 @@ class SeatFactory extends Factory
 
     public function definition(): array
     {
-        return $this->generateNonOverlappingSeat();
-    }
-
-    private function generateNonOverlappingSeat(): array
-    {
-        do {
-            $row = fake()->randomElement(['A', 'B']);
-            $number = fake()->numberBetween(1, 10);
-            $screeningId = Screening::query()->inRandomOrder()->value('id');
-            $userId = User::query()->inRandomOrder()->value('id');
-
-            // 重複する座席が存在するかチェック
-            $overlappingSeat = Seat::where('screening_id', $screeningId)
-                ->where('row', $row)
-                ->where('number', $number)
-                ->exists();
-
-            // screening_idとuser_idの組み合わせが重複しているかチェック
-            $overlappingUser = Seat::where('screening_id', $screeningId)
-                ->where('user_id', $userId)
-                ->exists();
-
-        } while ($overlappingSeat || $overlappingUser);
-
         return [
-            'screening_id' => $screeningId,
-            'user_id' => $userId,
-            'row' => $row,
-            'number' => $number,
-            'is_reserved' => fake()->boolean(90), // 90%の確率でtrue
+            'screening_id' => null,
+            'row' => fake()->randomElement(['A', 'B']),
+            'number' => fake()->numberBetween(1, 10),
+            'is_reserved' => false,
         ];
     }
 }

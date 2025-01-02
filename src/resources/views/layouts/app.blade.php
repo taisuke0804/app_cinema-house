@@ -15,6 +15,9 @@
       <a class="nav-link text-white ms-3" href="{{ route('user.screenings.calendar.index') }}">
         上映スケジュール
       </a>
+      <a class="nav-link text-white ms-3" href="/home">
+        座席予約一覧
+      </a>
 
       <!-- トグルボタン（レスポンシブ対応） -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

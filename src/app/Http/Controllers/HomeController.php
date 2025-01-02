@@ -26,6 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $today = \Carbon\Carbon::today();
         $reservations = Seat::with([
                 'screening:id,start_time,end_time,movie_id',
                 'screening.movie:id,title'
@@ -34,6 +35,7 @@ class HomeController extends Controller
             ->join('screenings', 'seats.screening_id', '=', 'screenings.id') // screeningテーブルと結合
             ->where('seats.user_id', $user->id)
             ->where('seats.is_reserved', true)
+            ->where('screenings.start_time', '>=', $today) // 今日以降の予約情報
             ->orderBy('screenings.start_time', 'asc') // start_timeでソート
             ->get();
 

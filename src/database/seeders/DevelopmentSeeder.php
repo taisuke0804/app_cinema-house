@@ -27,12 +27,6 @@ class DevelopmentSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        User::factory()->create([
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('1111aaaa'),
-        ]);
-
         User::factory()->count(50)->create();
 
         $this->call([
@@ -40,5 +34,7 @@ class DevelopmentSeeder extends Seeder
             ScreeningSeeder::class,
             SeatSeeder::class,
         ]);
+
+        $this->call(SampleDataSeeder::class);
     }
 }
