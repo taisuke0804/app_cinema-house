@@ -22,15 +22,11 @@ class DevelopmentSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
+        $this->call(SampleDataSeeder::class);
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-        ]);
-
-        User::factory()->create([
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('1111aaaa'),
         ]);
 
         User::factory()->count(50)->create();

@@ -17,22 +17,28 @@
       <strong>上映終了時刻:</strong> {{ $screening->end_time->format('H:i') }}
     </p>
 
+    <!-- 過去の上映スケジュールの場合の警告 -->
+    @if ($screening->start_time->isPast())
+      <div class="alert alert-warning">
+        この上映スケジュールは終了しました。
+      </div>
+    @else
     <!-- バリデーションエラーの表示 -->
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
     @endif
 
     <!-- ユーザーが予約済みの場合の警告 -->
     @if ($authAlreadyReserved)
-        <div class="alert alert-info">
-            <p>あなたの予約済み座席: {{ $authReservedSeat->row }}{{ $authReservedSeat->number }}</p>
-        </div>
+    <div class="alert alert-info">
+      <p>あなたの予約済み座席: {{ $authReservedSeat->row }}{{ $authReservedSeat->number }}</p>
+    </div>
     @endif
 
     <!-- 席予約状況 -->
@@ -44,37 +50,32 @@
         <div class="d-flex align-items-center mb-2">
           <span class="me-2">{{ $row }}</span>
           <div class="d-flex">
-            
+
             @foreach (range(1, 10) as $number)
               @php
                 $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
                 $isReserved = $seat->is_reserved ?? 0;
-                
+
                 if ($isReserved) {
-                    $seatColor = 'bg-secondary';
-                    $clickable = 'not-allowed';
+                  $seatColor = 'bg-secondary';
+                  $clickable = 'not-allowed';
                 } else {
-                    $seatColor = 'bg-success';
-                    $clickable = 'clickable';
+                  $seatColor = 'bg-success';
+                  $clickable = 'clickable';
                 }
-                
+
                 if ($authAlreadyReserved) {
-                    $clickable = 'not-allowed';
-                    if ($authReservedSeat->row === $row && $authReservedSeat->number === $number) {
-                        $seatColor = 'bg-primary';
-                    }
+                  $clickable = 'not-allowed';
+                  if ($authReservedSeat->row === $row && $authReservedSeat->number === $number) {
+                    $seatColor = 'bg-primary';
+                  }
                 }
-                
               @endphp
-              <div 
-                class="seat {{ $seatColor }} {{ $clickable }}
-                text-white me-3 d-flex justify-content-center align-items-center"
-                data-row="{{ $row }}"
-                data-number="{{ $number }}"
-                data-is-reserved="{{ $isReserved }}"
-              >
-                {{ $row . strval($number) }}
-              </div>
+            <div class="seat {{ $seatColor }} {{ $clickable }}
+                  text-white me-3 d-flex justify-content-center align-items-center" data-row="{{ $row }}"
+              data-number="{{ $number }}" data-is-reserved="{{ $isReserved }}">
+              {{ $row . strval($number) }}
+            </div>
             @endforeach
 
           </div>
@@ -86,7 +87,8 @@
       <h5>選択した座席情報</h5>
       <p id="selected-seat" class="text-muted">座席が選択されていません。</p>
 
-      <button id="reserve-button" class="btn btn-primary mt-3" disabled data-bs-toggle="modal" data-bs-target="#reserveModal">
+      <button id="reserve-button" class="btn btn-primary mt-3" disabled data-bs-toggle="modal"
+        data-bs-target="#reserveModal">
         予約する
       </button>
 
@@ -130,15 +132,17 @@
         pointer-events: none;
         cursor: not-allowed;
       }
+
       .clickable {
         cursor: pointer;
       }
     </style>
-
-
   </div>
+  @endif
+
 </div>
 
+<!-- jQueryによる非同期処理 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 @if (!$authAlreadyReserved)
 <script>
@@ -154,7 +158,7 @@
         // 座席情報をクリア
         $('#selected-seat').text('座席が選択されていません。');
         $('#reserve-button').prop('disabled', true); // ボタンを無効化
-      } 
+      }
       // 空き状態の座席をクリックした場合（緑色）
       else if ($seat.hasClass('bg-success')) {
         // 他の選択済み座席をリセット（単一選択の場合）
@@ -179,4 +183,5 @@
   });
 </script>
 @endif
+
 @endsection
