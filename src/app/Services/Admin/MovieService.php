@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Services\Admin;
+
+use App\Models\Movie;
+
+class MovieService
+{
+    /**
+     * 映画の一覧を取得
+     */
+    public function getMovies(): object
+    {
+        return Movie::select('id', 'title', 'description', 'genre')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    }
+
+    /**
+     * 映画の詳細を取得
+     */
+    public function getMovieById(int $id): object
+    {
+        $movie = Movie::select('id', 'title', 'description', 'genre')
+            ->findOrFail($id);
+
+        return $movie;
+    }
+}
