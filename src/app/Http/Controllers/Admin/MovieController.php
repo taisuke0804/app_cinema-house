@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\Rule;
-use App\Enums\Genre;
 use App\Services\Admin\MovieService;
+use App\Http\Requests\Admin\StoreMovieRequest;
 
 class MovieController extends Controller
 {
@@ -42,15 +41,9 @@ class MovieController extends Controller
     /**
      * 映画の新規登録処理
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreMovieRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:100'],
-            'genre' => ['required', 'integer', Rule::in(Genre::values())],
-            'description' => ['required', 'string', 'max:1000'],
-        ]);
-
-        Movie::create($validated);
+        $this->movieService->storeMovie($request->validated());
 
         return redirect()->route('admin.movies.index')->with('success', '映画の新規登録が完了しました');
     }

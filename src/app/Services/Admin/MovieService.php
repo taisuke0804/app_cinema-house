@@ -17,6 +17,14 @@ class MovieService
     }
 
     /**
+     * 映画の新規登録
+     */
+    public function storeMovie(array $validated): void
+    {
+        Movie::create($validated);
+    }
+
+    /**
      * 映画の詳細を取得
      */
     public function getMovieById(int $id): object
