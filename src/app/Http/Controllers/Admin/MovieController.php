@@ -9,17 +9,24 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rule;
 use App\Enums\Genre;
+use App\Services\Admin\MovieService;
 
 class MovieController extends Controller
 {
+    protected $movieService;
+
+    public function __construct(MovieService $movieService)
+    {
+        // MovieServiceクラスのインスタンスを生成
+        $this->movieService = $movieService;
+    }
+
     /**
      * 映画の一覧を表示
      */
     public function index(): View
     {
-        $movies = Movie::select('id', 'title', 'description', 'genre')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $movies = $this->movieService->getMovies();
         
         return view('admin.movies.index')->with(['movies' => $movies]);
     }
@@ -53,8 +60,7 @@ class MovieController extends Controller
      */
     public function show($id): View
     {
-        $movie = Movie::select('id', 'title', 'description', 'genre')
-            ->findOrFail($id);
+        $movie = $this->movieService->getMovieById($id);
 
         return view('admin.movies.show')->with(['movie' => $movie]);
     }
