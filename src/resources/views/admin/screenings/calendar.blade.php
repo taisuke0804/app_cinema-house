@@ -3,11 +3,6 @@
 @section('title', '上映カレンダー | CINEMA-HOUSE')
 
 @section('content')
-<script src="
-https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
-"></script>
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/tippy.js@6"></script>
 
 <div class="container mt-4">
   <h1 class="mb-4">上映カレンダー</h1>
@@ -20,8 +15,11 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
     </div>
   @endif
   
+  {{-- カレンダーコンテナ --}}
   <div id="calendar"></div>
 </div>
+
+@push('styles')
 <style>
   .fc-day-sat {
     background-color: #cce3f6;
@@ -31,6 +29,12 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
     background-color: #f8d7da;
   }
 </style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
@@ -61,4 +65,6 @@ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
     calendar.render();
   });
 </script>
+@endpush
+
 @endsection
