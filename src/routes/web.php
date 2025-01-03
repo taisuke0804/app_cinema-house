@@ -54,12 +54,13 @@ Route::get('/admin', function () {
     return view('admin.index');
 })->middleware('auth:admin')->name('admin.index');
 
-Route::controller(MovieController::class)->prefix('admin')->name('admin.')
-    ->middleware('auth:admin')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::controller(MovieController::class)->group(function () {
         Route::get('movies/', 'index')->name('movies.index');
         Route::get('movies/create', 'create')->name('movies.create');
         Route::post('movies/store', 'store')->name('movies.store');
         Route::get('movies/{id}', 'show')->name('movies.show');
+    });
 });
 
 Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')
