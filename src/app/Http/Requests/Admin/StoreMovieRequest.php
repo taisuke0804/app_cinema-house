@@ -26,4 +26,18 @@ class StoreMovieRequest extends FormRequest
             'description' => ['required', 'string', 'max:1000'],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'title' => '映画タイトル',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'genre.in' => ':attributeは、選択肢から選んでください。',
+        ];
+    }
 }
