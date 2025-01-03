@@ -44,11 +44,34 @@ class ScreeningService
      */
     public function getScreeningDetails(Screening $screening): Screening
     {
-        return Screening::with([
+        $screeningDetails = Screening::with([
             'movie:id,title,genre',
             'seats:id,screening_id,row,number,is_reserved',
         ])
         ->select('id', 'movie_id', 'start_time', 'end_time')
         ->findOrFail($screening->id);
+
+        return $screeningDetails;
+    }
+
+    /**
+     * 上映スケジュールの座席予約状況を取得
+     */
+    public function getScreeningSeats(Screening $screening): array
+    {
+        $seatRows = [];
+        foreach (range('A', 'B') as $row) {
+            $seats = [];
+            foreach (range(1, 10) as $number) {
+                $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
+                $seats[] = [
+                    'label' => $row . strval($number),
+                    'is_reserved' => $seat->is_reserved ?? false,
+                ];
+            }
+            $seatRows[$row] = $seats;
+        }
+
+        return $seatRows;
     }
 }

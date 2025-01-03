@@ -61,19 +61,13 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::post('movies/store', 'store')->name('movies.store');
         Route::get('movies/{id}', 'show')->name('movies.show');
     });
-});
 
-Route::controller(ScreeningCalendarController::class)->prefix('admin')->name('admin.')
-    ->middleware('auth:admin')->group(function () {
+    Route::controller(ScreeningCalendarController::class)->group(function () {
         Route::get('screenings/calendar', 'index')->name('screenings.calendar.index');
-
-        // カレンダーイベントの取得API
         Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
-
-        // 上映スケジュールの詳細ページ
         Route::get('screenings/{screening}', 'show')->name('screenings.show');
-
-        // 上映スケジュールの新規登録画面
         Route::get('screening/create/{movie_id}', 'create')->name('screenings.create');
         Route::post('screening/store', 'store')->name('screenings.store');
+    });
 });
+// ------------------------------------------------------------------------------------------------
