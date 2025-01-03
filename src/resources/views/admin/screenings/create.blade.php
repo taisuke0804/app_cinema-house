@@ -87,22 +87,14 @@
   </form>
 </div>
 
-{{-- 確認用モーダル --}}
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="confirmModalLabel">登録確認</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-      </div>
-      <div class="modal-body">
-        入力内容を送信してよろしいですか？
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('schedule-form').submit();">送信</button>
-      </div>
-    </div>
-  </div>
-</div>
+{{-- 確認用モーダルの呼び出し --}}
+<x-modal id="confirmModal" title="登録確認">
+  @slot('body', '入力内容を送信してよろしいですか？')
+
+  @slot('footer')
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+    <button type="button" class="btn btn-primary" onclick="document.getElementById('schedule-form').submit();">送信</button>
+  @endslot
+</x-modal>
+
 @endsection
