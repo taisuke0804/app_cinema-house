@@ -66,7 +66,7 @@ class ScreeningCalendarController extends Controller
     public function show(Screening $screening): View
     {
         $screeningDetails = $this->screeningService->getScreeningDetails($screening);
-        $searRows = $this->screeningService->getScreeningSeats($screening);
+        $searRows = $this->screeningService->getScreeningSeats($screeningDetails, 'admin');
         
         return view('admin.screenings.show')->with([
             'screening' => $screeningDetails,

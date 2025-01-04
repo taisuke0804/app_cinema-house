@@ -45,25 +45,17 @@ class ScreeningCalendarController extends Controller
      */
     public function show(Screening $screening)
     {
-        $screening = Screening::with([
-            'movie:id,title,genre',
-            'seats:id,screening_id,row,number,is_reserved',
-        ])->select('id', 'movie_id', 'start_time', 'end_time')
-        ->findOrFail($screening->id);
+        $screeningDetails = $this->screeningService->getScreeningDetails($screening);
+        $seatRows = $this->screeningService->getScreeningSeats($screening, 'web');
 
-        // ログインユーザーが予約済みの座席を取得
-        $authReservedSeat = Seat::where('screening_id', $screening->id)
-            ->where('user_id', Auth::guard('web')->id())
-            ->where('is_reserved', true)
-            ->first();
-        
-        // ログインユーザーが予約済みかどうか
-        $authAlreadyReserved = $authReservedSeat ? true : false;
+        // ログインユーザーの予約済み座席情報を取得
+        // 詳細画面全体で使用するため、ここで取得
+        $authReservedSeatInfo = $this->screeningService->getAuthReservedSeatInfo($screening);
         
         return view('user.screenings.show')->with([
-            'screening' => $screening,
-            'authAlreadyReserved' => $authAlreadyReserved,
-            'authReservedSeat' => $authReservedSeat,
+            'screening' => $screeningDetails,
+            'authReservedSeatInfo' => $authReservedSeatInfo,
+            'seatRows' => $seatRows,
         ]);
     }
 }

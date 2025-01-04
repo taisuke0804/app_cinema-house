@@ -6,3 +6,11 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+.not-allowed {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.clickable {
+  cursor: pointer;
+}
