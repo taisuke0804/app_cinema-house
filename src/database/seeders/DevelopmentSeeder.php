@@ -16,16 +16,16 @@ class DevelopmentSeeder extends Seeder
     {
         Admin::factory()->create([
             'name' => '管理者太郎',
-            'email' => 'admin@gmail.com',
+            'email' => env('ADMIN_EMAIL', 'admin@gmail.com'),
             'email_verified_at' => now(),
-            'password' => Hash::make('admin1234'),
+            'password' => Hash::make(env('ADMIN_PASSWORD', 'admin1234')),
             'remember_token' => Str::random(10),
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
         User::factory()->count(50)->create();
 
