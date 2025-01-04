@@ -70,10 +70,12 @@ class ScreeningService
             $seats = [];
             foreach (range(1, 10) as $number) {
                 $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
-
+                
                 // user側・ログインユーザーが予約済みの座席かどうか
                 if ($seat && $guard === 'web') {
                     $authReserved = $seat->user_id === $authId ? true : false;
+                } else {
+                    $authReserved = false;
                 }
 
                 $seats[] = [

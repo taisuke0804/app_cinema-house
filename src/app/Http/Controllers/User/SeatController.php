@@ -4,65 +4,38 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\User\ReserveSeatRequest;
 use App\Models\Seat;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\RedirectResponse;
+use App\Services\SeatReservationService;
+use App\Http\Requests\User\CancelSeatRequest;
 
 class SeatController extends Controller
 {
+    private $seatReservationService;
+
+    public function __construct(SeatReservationService $seatReservationService)
+    {
+        $this->seatReservationService = $seatReservationService;
+    }
+
     /**
      * 座席を予約する処理
      */
-    public function reserve(Request $request)
+    public function reserve(ReserveSeatRequest $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'row' => ['required', 'string', Rule::in(['A', 'B']), 'max:1'],
-            'number' => ['required', 'integer', 'between:1,10'],
-            'screening_id' => ['required', 'integer', 'exists:screenings,id'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-        ]);
-
-        $validated = $validator->validate();
-
-        // 同一のuser_idで予約済みか確認
-        $reservedSeat = Seat::where('screening_id', $validated['screening_id'])
-            ->where('user_id', $validated['user_id'])
-            ->where('is_reserved', true)
-            ->first();
-        if ($reservedSeat) {
-            $validator->errors()->add('seat', 'お客様はすでに予約済みです。');
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        // 他のユーザーがすでに予約済みか確認
-        $seat = Seat::where('screening_id', $validated['screening_id'])
-            ->where('row', $validated['row'])
-            ->where('number', $validated['number'])
-            ->first();
-
-        if ($seat) {
-            if ($seat->is_reserved) {
-                $validator->errors()->add('seat', '選択された座席はすでに予約済みです。');
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
-            $seat->user_id = $validated['user_id'];
-            $seat->is_reserved = true;
-            $seat->save();
-        } else {
-            Seat::create([
-                'row' => $validated['row'],
-                'number' => $validated['number'],
-                'screening_id' => $validated['screening_id'],
-                'user_id' => $validated['user_id'],
-                'is_reserved' => true,
-            ]);
-        }
+        $reservationData = $request->validated(); // バリデーション済みのデータを取得
+        $this->seatReservationService->reserveSeat($reservationData); // 座席予約処理を呼び出し
 
         // 成功した場合、完了画面にリダイレクト
         return redirect()->route('user.seat.reserve.completed')
             ->with('success', '座席予約が完了しました！');
     }
 
+    /**
+     * 座席予約完了画面
+     */
     public function completed()
     {
         $successMessage = session('success', 'ありがとうございます');
@@ -72,30 +45,10 @@ class SeatController extends Controller
     /**
      * 座席予約をキャンセルする処理
      */
-    public function cancel(Request $request)
+    public function cancel(CancelSeatRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'seat_id' => ['required', 'integer', 'exists:seats,id'],
-            'screening_id' => ['required', 'integer', 'exists:screenings,id'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'row' => ['required', 'string', Rule::in(['A', 'B']), 'max:1'],
-            'number' => ['required', 'integer', 'between:1,10'],
-        ]);
-        
-        $validated = $validator->validate();
-        
-        $seat = Seat::where('id', $validated['seat_id'])
-        ->where('screening_id', $validated['screening_id'])
-        ->where('user_id', $validated['user_id'])
-        ->where('row', $validated['row'])
-        ->where('number', $validated['number'])
-        ->first();
-        
-        if ($seat) {
-            $seat->user_id = null;
-            $seat->is_reserved = false;
-            $seat->save();
-        }
+        $validated = $request->validated();
+        $this->seatReservationService->cancelSeat($validated);
 
         return redirect()->route('home')
             ->with('success', '座席予約をキャンセルしました');
