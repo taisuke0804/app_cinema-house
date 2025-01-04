@@ -9,7 +9,7 @@ use App\Models\Seat;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use App\Services\SeatReservationService;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\User\CancelSeatRequest;
 
 class SeatController extends Controller
 {
@@ -45,30 +45,10 @@ class SeatController extends Controller
     /**
      * 座席予約をキャンセルする処理
      */
-    public function cancel(Request $request)
+    public function cancel(CancelSeatRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'seat_id' => ['required', 'integer', 'exists:seats,id'],
-            'screening_id' => ['required', 'integer', 'exists:screenings,id'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'row' => ['required', 'string', Rule::in(['A', 'B']), 'max:1'],
-            'number' => ['required', 'integer', 'between:1,10'],
-        ]);
-        
-        $validated = $validator->validate();
-        
-        $seat = Seat::where('id', $validated['seat_id'])
-        ->where('screening_id', $validated['screening_id'])
-        ->where('user_id', $validated['user_id'])
-        ->where('row', $validated['row'])
-        ->where('number', $validated['number'])
-        ->first();
-        
-        if ($seat) {
-            $seat->user_id = null;
-            $seat->is_reserved = false;
-            $seat->save();
-        }
+        $validated = $request->validated();
+        $this->seatReservationService->cancelSeat($validated);
 
         return redirect()->route('home')
             ->with('success', '座席予約をキャンセルしました');

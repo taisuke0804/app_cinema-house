@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Seat;
-use Illuminate\Support\Facades\Validator;
 
 class SeatReservationService
 {
@@ -36,4 +35,22 @@ class SeatReservationService
         }
     }
     
+    /**
+     * 座席予約をキャンセルする処理
+     */
+    public function cancelSeat(array $reservationData): void
+    {
+        $seat = Seat::where('id', $reservationData['seat_id'])
+        ->where('screening_id', $reservationData['screening_id'])
+        ->where('user_id', $reservationData['user_id'])
+        ->where('row', $reservationData['row'])
+        ->where('number', $reservationData['number'])
+        ->first();
+        
+        if ($seat) {
+            $seat->user_id = null;
+            $seat->is_reserved = false;
+            $seat->save();
+        }
+    }
 }
