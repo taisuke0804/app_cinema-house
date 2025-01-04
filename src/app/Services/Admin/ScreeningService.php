@@ -18,13 +18,15 @@ class ScreeningService
     /**
      * カレンダー表示用の上映スケジュールデータを取得
      */
-    public function getCalendarEvents(?int $year, ?int $month): array
+    public function getCalendarEvents(string $guard, $year = null, $month = null): array
     {
         $screenings = Screening::with('movie')
             ->select('id', 'movie_id', 'start_time', 'end_time')
             ->get();
+
+        $route = $guard === 'web' ? 'user.screenings.show' : 'admin.screenings.show';
         
-        $events = $screenings->map(function ($screening) {
+        $events = $screenings->map(function ($screening) use ($route) {
             return [
                 'id' => $screening->id,
                 'title' => $screening->movie->title,
@@ -32,7 +34,7 @@ class ScreeningService
                 'end' => $screening->end_time->format('Y-m-d'),
                 'start_time' => $screening->start_time->format('H:i'),
                 'end_time' => $screening->end_time->format('H:i'),
-                'url' => route('admin.screenings.show', $screening),
+                'url' => route($route, $screening),
             ];
         });
 

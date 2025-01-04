@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Screening;
 use App\Models\Seat;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Admin\ScreeningService;
 
 class ScreeningCalendarController extends Controller
 {
+    private $screeningService;
+
+    public function __construct(ScreeningService $screeningService)
+    {
+        $this->screeningService = $screeningService;
+    }
+
     /**
      * カレンダー表示ページ.
      */
@@ -27,22 +35,7 @@ class ScreeningCalendarController extends Controller
         $year = $request->input('year');
         $month = $request->input('month');
 
-        $screenings = Screening::with('movie')
-        ->select('id', 'movie_id', 'start_time', 'end_time')
-        ->get()
-        ->map(function ($screening) {
-            return [
-                'id' => $screening->id,
-                'title' => $screening->movie->title,
-                'start' => $screening->start_time->format('Y-m-d'),
-                'end' => $screening->end_time->format('Y-m-d'),
-                'start_time' => $screening->start_time->format('H:i'),
-                'end_time' => $screening->end_time->format('H:i'),
-                'url' => route('user.screenings.show', $screening),
-            ];
-        });
-
-        $events = $screenings->toArray();
+        $events = $this->screeningService->getCalendarEvents('web', $year, $month);
 
         return response()->json($events);
     }

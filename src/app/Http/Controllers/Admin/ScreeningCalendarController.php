@@ -56,7 +56,7 @@ class ScreeningCalendarController extends Controller
         $year = $request->input('year');
         $month = $request->input('month');
 
-        $events = $this->screeningService->getCalendarEvents($year, $month);
+        $events = $this->screeningService->getCalendarEvents('admin', $year, $month);
         return response()->json($events);
     }
 
