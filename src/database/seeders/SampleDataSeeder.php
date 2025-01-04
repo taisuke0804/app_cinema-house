@@ -18,8 +18,8 @@ class SampleDataSeeder extends Seeder
     {
         $user = User::factory()->create([
             'name' => 'テストユーザー',
-            'email' => 'test@gmail.com',
-            'password' => Hash::make('1111aaaa'),
+            'email' => env('TEST_USER_EMAIL', 'test@gmail.com'),
+            'password' => Hash::make(env('TEST_USER_PASSWORD', '1111aaaa')),
         ]);
 
         $movie = Movie::factory()->create([
