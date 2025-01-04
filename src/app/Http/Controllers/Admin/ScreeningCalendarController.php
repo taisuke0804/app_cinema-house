@@ -56,7 +56,7 @@ class ScreeningCalendarController extends Controller
         $year = $request->input('year');
         $month = $request->input('month');
 
-        $events = $this->screeningService->getCalendarEvents($year, $month);
+        $events = $this->screeningService->getCalendarEvents('admin', $year, $month);
         return response()->json($events);
     }
 
@@ -66,7 +66,7 @@ class ScreeningCalendarController extends Controller
     public function show(Screening $screening): View
     {
         $screeningDetails = $this->screeningService->getScreeningDetails($screening);
-        $searRows = $this->screeningService->getScreeningSeats($screening);
+        $searRows = $this->screeningService->getScreeningSeats($screeningDetails, 'admin');
         
         return view('admin.screenings.show')->with([
             'screening' => $screeningDetails,

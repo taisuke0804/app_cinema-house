@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Screening;
 use App\Models\Seat;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Admin\ScreeningService;
 
 class ScreeningCalendarController extends Controller
 {
+    private $screeningService;
+
+    public function __construct(ScreeningService $screeningService)
+    {
+        $this->screeningService = $screeningService;
+    }
+
     /**
      * カレンダー表示ページ.
      */
@@ -27,22 +35,7 @@ class ScreeningCalendarController extends Controller
         $year = $request->input('year');
         $month = $request->input('month');
 
-        $screenings = Screening::with('movie')
-        ->select('id', 'movie_id', 'start_time', 'end_time')
-        ->get()
-        ->map(function ($screening) {
-            return [
-                'id' => $screening->id,
-                'title' => $screening->movie->title,
-                'start' => $screening->start_time->format('Y-m-d'),
-                'end' => $screening->end_time->format('Y-m-d'),
-                'start_time' => $screening->start_time->format('H:i'),
-                'end_time' => $screening->end_time->format('H:i'),
-                'url' => route('user.screenings.show', $screening),
-            ];
-        });
-
-        $events = $screenings->toArray();
+        $events = $this->screeningService->getCalendarEvents('web', $year, $month);
 
         return response()->json($events);
     }
@@ -52,25 +45,17 @@ class ScreeningCalendarController extends Controller
      */
     public function show(Screening $screening)
     {
-        $screening = Screening::with([
-            'movie:id,title,genre',
-            'seats:id,screening_id,row,number,is_reserved',
-        ])->select('id', 'movie_id', 'start_time', 'end_time')
-        ->findOrFail($screening->id);
+        $screeningDetails = $this->screeningService->getScreeningDetails($screening);
+        $seatRows = $this->screeningService->getScreeningSeats($screening, 'web');
 
-        // ログインユーザーが予約済みの座席を取得
-        $authReservedSeat = Seat::where('screening_id', $screening->id)
-            ->where('user_id', Auth::guard('web')->id())
-            ->where('is_reserved', true)
-            ->first();
-        
-        // ログインユーザーが予約済みかどうか
-        $authAlreadyReserved = $authReservedSeat ? true : false;
+        // ログインユーザーの予約済み座席情報を取得
+        // 詳細画面全体で使用するため、ここで取得
+        $authReservedSeatInfo = $this->screeningService->getAuthReservedSeatInfo($screening);
         
         return view('user.screenings.show')->with([
-            'screening' => $screening,
-            'authAlreadyReserved' => $authAlreadyReserved,
-            'authReservedSeat' => $authReservedSeat,
+            'screening' => $screeningDetails,
+            'authReservedSeatInfo' => $authReservedSeatInfo,
+            'seatRows' => $seatRows,
         ]);
     }
 }

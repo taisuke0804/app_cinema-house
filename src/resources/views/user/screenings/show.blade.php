@@ -35,52 +35,40 @@
     @endif
 
     <!-- ユーザーが予約済みの場合の警告 -->
-    @if ($authAlreadyReserved)
+    @if ($authReservedSeatInfo)
     <div class="alert alert-info">
-      <p>あなたの予約済み座席: {{ $authReservedSeat->row }}{{ $authReservedSeat->number }}</p>
+      <p>あなたの予約済み座席: {{ $authReservedSeatInfo->row }}{{ $authReservedSeatInfo->number }}</p>
     </div>
     @endif
 
     <!-- 席予約状況 -->
     <hr>
     <h5>座席予約状況</h5>
-    <p class="text-muted">緑色: 空き / 灰色: 他人の予約 / 青色: 自分の予約</p>
+    <p class="text-muted">緑色: 空き / 灰色: 他人の予約 / 黄色: 自分の予約 / 青色: 選択中</p>
     <div class="d-flex flex-column align-items-start">
-      @foreach (range('A', 'B') as $row)
+
+      @foreach ($seatRows as $row => $seats)
         <div class="d-flex align-items-center mb-2">
           <span class="me-2">{{ $row }}</span>
           <div class="d-flex">
-
-            @foreach (range(1, 10) as $number)
+            @foreach ($seats as $seat)
               @php
-                $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
-                $isReserved = $seat->is_reserved ?? 0;
+                $seatColor = $seat['is_reserved'] ? 'bg-secondary' : 'bg-success';
+                $seatColor = $seat['auth_reserved'] ? 'bg-warning' : $seatColor;
 
-                if ($isReserved) {
-                  $seatColor = 'bg-secondary';
-                  $clickable = 'not-allowed';
-                } else {
-                  $seatColor = 'bg-success';
-                  $clickable = 'clickable';
-                }
-
-                if ($authAlreadyReserved) {
-                  $clickable = 'not-allowed';
-                  if ($authReservedSeat->row === $row && $authReservedSeat->number === $number) {
-                    $seatColor = 'bg-primary';
-                  }
-                }
+                // Bootstrapのカスタムクラスを設定
+                $clickable = (!$seat['is_reserved'] && !$authReservedSeatInfo) ? 'clickable' : 'not-allowed';
               @endphp
-            <div class="seat {{ $seatColor }} {{ $clickable }}
-                  text-white me-3 d-flex justify-content-center align-items-center" data-row="{{ $row }}"
-              data-number="{{ $number }}" data-is-reserved="{{ $isReserved }}">
-              {{ $row . strval($number) }}
-            </div>
+              <div class="seat {{ $seatColor}} {{ $clickable }} text-white me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; font-size: 1rem; border-radius: 4px;"
+                data-row="{{ $seat['row'] }}" data-number="{{ $seat['number'] }}" data-is-reserved="{{ $seat['is_reserved'] }}">
+                {{ $seat['label'] }}
+              </div>
             @endforeach
-
           </div>
         </div>
       @endforeach
+
+      
 
       <!-- 選択した座席情報 -->
       <hr>
@@ -116,27 +104,9 @@
           </div>
         </div>
       </div>
+      <!-- /予約確認モーダル -->
 
     </div>
-
-    <!-- Bootstrapのカスタムクラス -->
-    <style>
-      .seat {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-        border-radius: 4px;
-      }
-
-      .not-allowed {
-        pointer-events: none;
-        cursor: not-allowed;
-      }
-
-      .clickable {
-        cursor: pointer;
-      }
-    </style>
   </div>
   @endif
 
@@ -144,41 +114,38 @@
 
 <!-- jQueryによる非同期処理 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-@if (!$authAlreadyReserved)
+@if (!$authReservedSeatInfo)
 <script>
   $(document).ready(function () {
+    // 空席（緑色）の座席がクリックされたときの処理
     $('.seat.bg-success').on('click', function () {
       const $seat = $(this);
-      const isReserved = $seat.data('is-reserved');
 
-      // クリックされた座席がすでに選択されている場合（青色）
+      // 座席が選択済み（青色）の場合、その座席を選択解除
       if ($seat.hasClass('bg-primary')) {
-        $seat.removeClass('bg-primary').addClass('bg-success'); // 空き状態に戻す
-
-        // 座席情報をクリア
-        $('#selected-seat').text('座席が選択されていません。');
-        $('#reserve-button').prop('disabled', true); // ボタンを無効化
+        $seat.removeClass('bg-primary').addClass('bg-success'); // 空席（緑色）に戻す
+        $('#selected-seat').text('座席が選択されていません。'); // 選択状態をリセット
+        $('#reserve-button').prop('disabled', true); // 予約ボタンを無効化
       }
-      // 空き状態の座席をクリックした場合（緑色）
+      // 空席（緑色）の座席が選択された場合
       else if ($seat.hasClass('bg-success')) {
-        // 他の選択済み座席をリセット（単一選択の場合）
+        // 他の選択済み座席をリセット（単一選択にするため）
         $('.seat.bg-primary').removeClass('bg-primary').addClass('bg-success');
 
         // クリックした座席を選択状態（青色）に変更
         $seat.removeClass('bg-success').addClass('bg-primary');
 
         // 選択した座席情報を表示
-        const row = $seat.data('row');
-        const number = $seat.data('number');
-        $('#selected-seat').text(`選択した座席: ${row}${number}`);
-        $('#reserve-button').prop('disabled', false); // ボタンを有効化
+        const row = $seat.data('row'); // 行情報を取得
+        const number = $seat.data('number'); // 番号情報を取得
+        $('#selected-seat').text(`選択した座席: ${row}${number}`); // 表示を更新
+        $('#reserve-button').prop('disabled', false); // 予約ボタンを有効化
 
-        // モーダルに選択情報を設定
+        // モーダルウィンドウに選択した座席情報を設定
         $('#modal-selected-seat').text(`選択した座席: ${row}${number}`);
-        $('#modal-row').val(row);
-        $('#modal-number').val(number);
+        $('#modal-row').val(row); // モーダルの隠しフィールドに行情報を設定
+        $('#modal-number').val(number); // モーダルの隠しフィールドに番号情報を設定
       }
-
     });
   });
 </script>
