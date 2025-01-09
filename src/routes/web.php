@@ -39,6 +39,7 @@ Route::controller(SeatController::class)->prefix('user')->name('user.')
         Route::post('/seat/reserve', 'reserve')->name('seat.reserve');
         Route::get('/seat/reserve/completed', 'completed')->name('seat.reserve.completed');
         Route::delete('/seat/cancel', 'cancel')->name('seat.cancel');
+        Route::get('/seat/reserve-list', 'reserveList')->name('seat.reserve-list');
 });
 
 // ------------------------------------------------------------------------------------------------

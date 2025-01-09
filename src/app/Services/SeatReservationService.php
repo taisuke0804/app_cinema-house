@@ -53,4 +53,26 @@ class SeatReservationService
             $seat->save();
         }
     }
+
+    /**
+     * ログインしたユーザーの予約した座席の一覧を取得
+     */
+    public function getReserveList(int $userId): object
+    {
+        // dd($userId);
+        $today = \Carbon\Carbon::today();
+        $authReserveList = Seat::with([
+            'screening:id,start_time,end_time,movie_id',
+            'screening.movie:id,title'
+        ])
+        ->select('seats.id', 'seats.screening_id', 'seats.row', 'seats.number', 'seats.is_reserved')
+        ->join('screenings', 'seats.screening_id', '=', 'screenings.id') // screeningテーブルと結合
+        ->where('seats.user_id', $userId)
+        ->where('seats.is_reserved', true)
+        ->where('screenings.start_time', '>=', $today) // 今日以降の予約情報
+        ->orderBy('screenings.start_time', 'asc') // start_timeでソート
+        ->get();
+            // dd($authReserveList);
+        return $authReserveList;
+    }
 }

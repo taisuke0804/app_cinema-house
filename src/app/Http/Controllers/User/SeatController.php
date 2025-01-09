@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\User\ReserveSeatRequest;
-use App\Models\Seat;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use App\Services\SeatReservationService;
 use App\Http\Requests\User\CancelSeatRequest;
+use Illuminate\Support\Facades\Auth;
 
 class SeatController extends Controller
 {
@@ -52,5 +50,16 @@ class SeatController extends Controller
 
         return redirect()->route('home')
             ->with('success', '座席予約をキャンセルしました');
+    }
+
+    /**
+     * 予約した座席の一覧を表示
+     */
+    public function reserveList()
+    {
+        $authReserveList = $this->seatReservationService->getReserveList(Auth::id());
+        // dd($authReserveList, '予約した座席の一覧を表示');
+        return view('user.seat.reserve_list')->with('authReserveList', $authReserveList);
+        // dump('予約した座席の一覧を表示');
     }
 }
