@@ -28,6 +28,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('home');
             }
         });
+
+        $middleware->alias([
+            'PDF' => \Barryvdh\DomPDF\ServiceProvider::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

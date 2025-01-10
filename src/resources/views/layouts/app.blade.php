@@ -15,7 +15,7 @@
       <a class="nav-link text-white ms-3" href="{{ route('user.screenings.calendar.index') }}">
         上映スケジュール
       </a>
-      <a class="nav-link text-white ms-3" href="/home">
+      <a class="nav-link text-white ms-3" href="{{ route('user.seat.reserve-list')}}">
         座席予約一覧
       </a>
 
