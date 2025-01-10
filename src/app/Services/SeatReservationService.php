@@ -6,6 +6,9 @@ use App\Models\Seat;
 
 class SeatReservationService
 {
+    /**
+     * 座席情報を取得
+     */
     public function getSeatInfo(array $reservationData)
     {
         $seat = Seat::where('screening_id', $reservationData['screening_id'])
@@ -16,6 +19,9 @@ class SeatReservationService
         return $seat;
     }
 
+    /**
+     * 座席を予約する処理
+     */
     public function reserveSeat(array $reservationData): void
     {
         $seat = $this->getSeatInfo($reservationData);
@@ -59,7 +65,6 @@ class SeatReservationService
      */
     public function getReserveList(int $userId): object
     {
-        // dd($userId);
         $today = \Carbon\Carbon::today();
         $authReserveList = Seat::with([
             'screening:id,start_time,end_time,movie_id',
@@ -72,7 +77,27 @@ class SeatReservationService
         ->where('screenings.start_time', '>=', $today) // 今日以降の予約情報
         ->orderBy('screenings.start_time', 'asc') // start_timeでソート
         ->get();
-            // dd($authReserveList);
+        
         return $authReserveList;
+    }
+
+    /**
+     * ログインしたユーザーの予約した座席情報を取得（個別）
+     * PDF出力用
+     */
+    public function getReservationData(int $id): object
+    {
+        $reservationData = Seat::with([
+            'screening:id,start_time,end_time,movie_id',
+            'screening.movie:id,title'
+        ])
+        ->select('seats.id', 'seats.screening_id', 'seats.row', 'seats.number')
+        ->join('screenings', 'seats.screening_id', '=', 'screenings.id') // screeningテーブルと結合
+        ->where('seats.id', $id)
+        ->where('seats.is_reserved', true)
+        ->first();
+        // dd($reservationData);
+        
+        return $reservationData;
     }
 }

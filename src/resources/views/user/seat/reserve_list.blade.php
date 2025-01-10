@@ -6,6 +6,11 @@
 <div class="container mt-5">
   <h2 class="mb-4">座席予約一覧</h2>
 
+  {{-- 当日提示に関する説明 --}}
+  <div class="alert alert-info">
+    当日はPDF画面を提示していただき、ご入場ください。
+  </div>
+
   {{-- 処理完了のメッセージ表示 --}}
   @if(session('success'))
   <div class="alert alert-success">
@@ -48,6 +53,12 @@
         <td>{{ $reservation->screening->start_time->format('H:i') }} ～ {{ $reservation->screening->end_time->format('H:i') }}</td>
         <td>{{ $reservation->row .  strval($reservation->number) }}</td>
         <td>
+          {{-- PDF出力ボタン --}}
+          <a href="{{ route('user.seat.reserve.export-pdf', $reservation->id) }}" class="btn btn-primary btn-sm" target="_blank">
+            PDF出力
+          </a>
+          
+          {{-- キャンセルボタン --}}
           <button 
             type="button" 
             class="btn btn-danger btn-sm" 
