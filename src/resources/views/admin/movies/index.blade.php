@@ -18,6 +18,69 @@
     <a href="{{ route('admin.movies.create') }}" class="btn btn-success">映画を新規登録</a>
   </div>
 
+  {{-- 検索フォーム --}}
+  <div class="accordion mb-4" id="searchAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingSearch">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#searchForm" aria-expanded="false" aria-controls="searchForm">
+          検索条件を表示
+        </button>
+      </h2>
+      <div id="searchForm" class="accordion-collapse collapse" aria-labelledby="headingSearch" data-bs-parent="#searchAccordion">
+        <div class="accordion-body">
+          <form method="GET" action="{{ route('admin.movies.index') }}">
+            <div class="row g-3">
+              {{-- タイトル検索 --}}
+              <div class="col-md-6">
+                <label for="title" class="form-label">タイトル</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ request('title') }}">
+              </div>
+
+              {{-- 完全一致・あいまい検索 --}}
+              <div class="col-md-6">
+                <label class="form-label">タイトル検索方法</label>
+                <div class="d-flex align-items-center">
+                  <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="search_type" id="exact" value="exact" {{ request('search_type') == 'exact' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="exact">完全一致</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="search_type" id="partial" value="partial" {{ request('search_type') == 'partial' ? 'checked' : '' }}>
+                    <label class="form-check-label" for="partial">あいまい</label>
+                  </div>
+                </div>
+              </div>
+
+              {{-- ジャンル検索（空の状態） --}}
+              <div class="col-md-6">
+                <label for="genre" class="form-label">ジャンル</label>
+                <select class="form-select" id="genre" name="genre">
+                  <option value="">すべて</option>
+                  @foreach (\App\Enums\Genre::cases() as $genre)
+                    <option value="{{ $genre->value }}" {{ request('genre') == $genre->value ? 'selected' : '' }}>
+                      {{ $genre->getLabel() }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              {{-- 説明文検索 --}}
+              <div class="col-md-6">
+                <label for="description" class="form-label">説明文</label>
+                <input type="text" class="form-control" id="description" name="description" value="{{ request('description') }}">
+              </div>
+            </div>
+            <div class="mt-3 text-end">
+              <button type="submit" class="btn btn-primary">検索</button>
+              <a href="{{ route('admin.movies.index') }}" class="btn btn-secondary">リセット</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- 映画一覧テーブル --}}
   <table class="table table-striped">
     <thead>
       <tr>
@@ -42,4 +105,5 @@
   {{-- ページネーションリンク --}}
   {{ $movies->links('vendor.pagination.movie') }}
 </div>
+
 @endsection
