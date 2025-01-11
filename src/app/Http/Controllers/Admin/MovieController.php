@@ -57,4 +57,14 @@ class MovieController extends Controller
 
         return view('admin.movies.show')->with(['movie' => $movie]);
     }
+
+    /**
+     * 映画情報の削除処理
+     */
+    public function destroy(int $movie_id): RedirectResponse
+    {
+        $this->movieService->deleteMovie($movie_id);
+
+        return redirect()->route('admin.movies.index')->with('success', '映画情報を削除しました');
+    }
 }
