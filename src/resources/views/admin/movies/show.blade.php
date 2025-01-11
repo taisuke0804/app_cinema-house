@@ -47,7 +47,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <form action="#" method="POST" class="d-inline">
+        <form action="{{ route('admin.movies.destroy', $movie->id) }}" method="POST" class="d-inline">
           @csrf
           @method('DELETE')
           <button type="submit" class="btn btn-danger">削除する</button>
