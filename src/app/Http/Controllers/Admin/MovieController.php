@@ -23,9 +23,9 @@ class MovieController extends Controller
     /**
      * 映画の一覧を表示
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $movies = $this->movieService->getMovies();
+        $movies = $this->movieService->getMovies($request);
         
         return view('admin.movies.index')->with(['movies' => $movies]);
     }
