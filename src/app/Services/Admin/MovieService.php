@@ -34,4 +34,12 @@ class MovieService
 
         return $movie;
     }
+
+    /**
+     * 映画情報の削除処理
+     */
+    public function deleteMovie(int $movie_id): void
+    {
+        Movie::findOrFail($movie_id)->delete();
+    }
 }

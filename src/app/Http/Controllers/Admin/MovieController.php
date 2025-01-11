@@ -61,8 +61,10 @@ class MovieController extends Controller
     /**
      * 映画情報の削除処理
      */
-    public function destroy(int $movie_id)
+    public function destroy(int $movie_id): RedirectResponse
     {
-        dd($movie_id);
+        $this->movieService->deleteMovie($movie_id);
+
+        return redirect()->route('admin.movies.index')->with('success', '映画情報を削除しました');
     }
 }
