@@ -26,7 +26,9 @@
           検索条件を表示
         </button>
       </h2>
-      <div id="searchForm" class="accordion-collapse collapse" aria-labelledby="headingSearch" data-bs-parent="#searchAccordion">
+      <div id="searchForm" 
+        class="accordion-collapse collapse {{ request()->hasAny(['title', 'genre', 'description']) ? 'show' : '' }}" 
+        aria-labelledby="headingSearch" data-bs-parent="#searchAccordion">
         <div class="accordion-body">
           <form method="GET" action="{{ route('admin.movies.index') }}">
             <div class="row g-3">
@@ -38,17 +40,21 @@
 
               {{-- 完全一致・あいまい検索 --}}
               <div class="col-md-6">
-                <label class="form-label">タイトル検索方法</label>
-                <div class="d-flex align-items-center">
-                  <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="search_type" id="exact" value="exact" {{ request('search_type') == 'exact' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="exact">完全一致</label>
+                  <label class="form-label">タイトル検索方法</label>
+                  <div class="d-flex align-items-center">
+                      {{-- あいまい検索 --}}
+                      <div class="form-check me-3">
+                          <input class="form-check-input" type="radio" name="search_type" id="partial" value="partial" 
+                              {{ request('search_type', 'partial') == 'partial' ? 'checked' : '' }}>
+                          <label class="form-check-label" for="partial">あいまい</label>
+                      </div>
+                      {{-- 完全一致 --}}
+                      <div class="form-check">
+                          <input class="form-check-input" type="radio" name="search_type" id="exact" value="exact" 
+                              {{ request('search_type') == 'exact' ? 'checked' : '' }}>
+                          <label class="form-check-label" for="exact">完全一致</label>
+                      </div>
                   </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="search_type" id="partial" value="partial" {{ request('search_type') == 'partial' ? 'checked' : '' }}>
-                    <label class="form-check-label" for="partial">あいまい</label>
-                  </div>
-                </div>
               </div>
 
               {{-- ジャンル検索（空の状態） --}}
