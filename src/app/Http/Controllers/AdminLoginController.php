@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Http\Requests\AdminLoginRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Admin\TwoFactorAuthService;
 
 class AdminLoginController extends Controller
 {
@@ -31,6 +32,11 @@ class AdminLoginController extends Controller
      */
      public function login(AdminLoginRequest $request)
      {
+        // 2段階認証が有効かどうかをチェック
+        if (env('ADMIN_TFA', false) === true) {
+            return $this->twoFactorAuth($request); // 2段階認証処理を実行
+        }
+        
         // リクエストバリデーションと認証を実行
         $request->authenticate();
 
@@ -38,6 +44,29 @@ class AdminLoginController extends Controller
 
         return redirect()->intended(route('admin.index'));
      }
+
+    /**
+    * 2段階認証処理
+    */
+    public function twoFactorAuth(AdminLoginRequest $request)
+    {
+        $credentials = $request->only('email', 'password');
+        $twoFactorAuthService = new TwoFactorAuthService();
+        $twoFactorAuthService->twoFactorAuthFirstProcess($credentials);
+        return view('admin.firstAuthcompleted');
+    }
+
+    /**
+     * 2段階認証・2回目のログイン画面を表示
+     */
+    public function secondLogin(Request $request)
+    {
+        // hasValidSignature()メソッド・・・リクエストの署名が有効かどうかをチェック
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+        return view('admin.secondLoginForm');
+    }
 
      /**
       * 管理者ログアウト処理
