@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TwoFactorAuthOnetimePass;
 
 class TwoFactorAuthService
 {
@@ -18,7 +20,7 @@ class TwoFactorAuthService
     {
         if (Auth::guard('admin')->validate($credentials)) {
             $randomPassword = $this->generateCode();
-            $loginLimitTime = now()->addMinutes(5); 
+            $loginLimitTime = now()->addMinutes(5); // 5分間の有効期限
             $admin = Admin::where('email', $credentials['email'])->first();
             $admin->tfa_token = Hash::make($randomPassword);
             $admin = $admin->save();
@@ -28,7 +30,10 @@ class TwoFactorAuthService
                 ['email' => $credentials['email']]
             );
 
-            // メール送信処理 後ほど実装
+            // 2段階認証コードをメールで送信
+            \Mail::to($credentials['email'])->send(new TwoFactorAuthOnetimePass(
+                $randomPassword, $signedUrl
+            ));
             
         } else {
             throw ValidationException::withMessages(['failed' => __('auth.failed')]);
