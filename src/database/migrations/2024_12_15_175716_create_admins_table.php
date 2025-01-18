@@ -18,6 +18,9 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('tfa_token')->nullable()->comment('2段階認証コード');
+            $table->timestamp('tfa_expires_at')->nullable()->comment('2段階認証コードの有効期限');
+            $table->boolean('tfa_enabled')->default(false)->comment('2段階認証の有効化フラグ');
             $table->timestamps();
         });
     }

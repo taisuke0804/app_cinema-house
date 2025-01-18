@@ -15,6 +15,9 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
+        'tfa_token',
+        'tfa_expires_at',
+        'tfa_enabled',
     ];
 
     protected $hidden = [
@@ -27,6 +30,7 @@ class Admin extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'tfa_expires_at' => 'datetime',
         ];
     }
 }
