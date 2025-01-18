@@ -53,7 +53,8 @@ Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin
 Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
 // 2段階認証処理用のルート
-Route::get('/admin/login/second', [AdminLoginController::class, 'secondLogin'])->name('admin.secondLogin');
+Route::get('/admin/login/second', [AdminLoginController::class, 'showSecondLogin'])->name('admin.secondLogin');
+Route::post('/admin/login/secondAuth', [AdminLoginController::class, 'secondAuth'])->name('admin.secondAuth');
 
 Route::get('/admin', function () {
     return view('admin.index');

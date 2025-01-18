@@ -27,18 +27,19 @@
             @endif
 
             <!-- ワンタイムパスワード入力フォーム -->
-            <form method="POST" action="">
+            <form method="POST" action="{{ route('admin.secondAuth')}}">
               @csrf
+              <input type="hidden" name="email" value="{{ request()->email }}">
               <div class="mb-3">
-                <label for="otp" class="form-label">ワンタイムパスワード</label>
+                <label for="tfa_token" class="form-label">ワンタイムパスワード</label>
                 <input 
-                  type="text" 
-                  id="otp" 
-                  name="otp" 
-                  class="form-control @error('otp') is-invalid @enderror" 
+                  type="number" 
+                  id="tfa_token" 
+                  name="tfa_token" 
+                  class="form-control @error('tfa_token') is-invalid @enderror" 
                   placeholder="4桁のパスワードを入力" 
                   required>
-                @error('otp')
+                @error('tfa_token')
                   <div class="invalid-feedback">
                     {{ $message }}
                   </div>

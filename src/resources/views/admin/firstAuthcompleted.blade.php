@@ -18,7 +18,7 @@
             <p class="mb-4">
               管理者メールアドレスにワンタイムパスワードを送信しましたのでご確認ください。
             </p>
-            <a href="{{ route('index') }}" class="btn btn-primary">ホームに戻る</a>
+            <a href="{{ route('admin.login') }}" class="btn btn-primary">管理者ログインに戻る</a>
           </div>
         </div>
       </div>

@@ -41,6 +41,23 @@ class TwoFactorAuthService
     }
 
     /**
+     * 2段階認証処理の2回目の処理
+     * Hash::check()メソッド・・・ハッシュ化された文字列が一致するかどうかを確認
+     */
+    public function twoFactorAuthSecondProcess($email, $tfaToken): void
+    {
+        $admin = Admin::where('email', $email)->first();
+        
+        if (Hash::check($tfaToken, $admin->tfa_token)) {
+            $admin->tfa_token = null;
+            $admin->save();
+            Auth::guard('admin')->login($admin);
+        } else {
+            throw ValidationException::withMessages(['tfa_token' => '2段階認証コードが正しくありません']);
+        }
+    }
+
+    /**
      * 2段階認証コードを生成
      * pow()関数・・・べき乗を計算する
      * random_int()関数・・・指定した範囲の乱数を生成する
