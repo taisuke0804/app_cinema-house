@@ -9,6 +9,7 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TwoFactorAuthOnetimePass;
+use Illuminate\Support\Facades\URL;
 
 class TwoFactorAuthTest extends TestCase
 {
@@ -91,5 +92,39 @@ class TwoFactorAuthTest extends TestCase
                    $mail->assertSeeInHtml($admin->tfa_token) &&
                    $mail->assertSeeInHtml($url);
         });
+    }
+
+    /**
+     * 有効な署名付きURLとパスワードで2段階認証が成功することをテスト
+     */
+    public function test_two_factor_auth_verifies_with_valid_signed_url(): void
+    {
+        Mail::fake();
+        $admin = $this->admin_create();
+        $this->post(route('admin.login.post'), [
+            'email' => $admin->email,
+            'password' => 'admin1234',
+        ]);
+        
+        $signedUrl = null;
+        $randomPassword = null;
+        // 署名付きURLとランダムパスワードを参照渡しで変数に格納
+        Mail::assertSent(TwoFactorAuthOnetimePass::class, function (TwoFactorAuthOnetimePass $mail) use ($admin, &$signedUrl, &$randomPassword) {
+            
+            $signedUrl = $mail->signedUrl;
+            $randomPassword = $mail->randomPassword;
+            return true;
+        });
+        
+        $response = $this->get($signedUrl);
+        $response->assertStatus(200);
+        
+        $response = $this->post(route('admin.secondAuth'), [
+            'email' => $admin->email,
+            'tfa_token' => $randomPassword,
+        ]);
+
+        $response->assertRedirect(route('admin.index'));
+        $this->assertAuthenticatedAs($admin, 'admin');
     }
 }
