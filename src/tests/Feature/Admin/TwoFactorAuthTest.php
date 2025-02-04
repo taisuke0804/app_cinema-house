@@ -127,4 +127,34 @@ class TwoFactorAuthTest extends TestCase
         $response->assertRedirect(route('admin.index'));
         $this->assertAuthenticatedAs($admin, 'admin');
     }
+
+    /**
+     * 有効期限切れの署名付きURLにアクセスした場合、エラーが返されることをテスト
+     */
+    public function test_signed_url_fails_after_expiry(): void
+    {
+        Mail::fake();
+        $admin = $this->admin_create();
+        $this->post(route('admin.login.post'), [
+            'email' => $admin->email,
+            'password' => 'admin1234',
+        ]);
+        
+        $signedUrl = null;
+        $randomPassword = null;
+        Mail::assertSent(TwoFactorAuthOnetimePass::class, function (TwoFactorAuthOnetimePass $mail) use ($admin, &$signedUrl, &$randomPassword) {
+            
+            $signedUrl = $mail->signedUrl;
+            $randomPassword = $mail->randomPassword;
+            return true;
+        });
+
+        $this->travel(5)->minutes();
+        $this->travel(1)->seconds();
+        
+        // 5分後に署名付きURLをアクセス
+        $response = $this->get($signedUrl);
+        $response->assertStatus(401); //署名付きURLが有効期限切れのためエラー
+        
+    }
 }
