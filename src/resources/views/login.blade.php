@@ -3,72 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="{{ Vite::asset('resources/images/favicon.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <title>ログイン | CINEMA-HOUSE</title>
-  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+  @vite(['resources/css/style.css'])
 </head>
 <body>
-  <div class="container mt-5">
-    <!-- タイトル -->
-    <div class="text-center mb-4">
-      <a href="/" class="d-block mb-3 text-decoration-none text-primary fs-1">CINEMA-HOUSE</a>
-      <h1 class="h3">ログイン</h1>
-      <p class="lead">CINEMA-HOUSEのアカウントにログイン</p>
-    </div>
-    <!-- /タイトル -->
+  <main class="bg-image">
+    <div class="container login-container">
+      <h1 class="site-title">
+        <a href="{{ route('index')}}">
+          CINEMA-HOUSE
+        </a>
+      </h1>
 
-    <!-- ログインフォーム -->
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <!-- バリデーションエラーの表示 -->
-            @if ($errors->any())
-              <div class="alert alert-danger">
-                <ul class="mb-0">
-                  @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                  @endforeach
-                </ul>
-              </div>
-            @endif
-            <!-- /バリデーションエラーの表示 -->
+      <p>CINEMA-HOUSEのアカウントにログイン</p>
 
-            <form method="POST" action="{{ route('login') }}">
-              @csrf
-              <div class="mb-3">
-                <label for="email" class="form-label">メールアドレス</label>
-                <input 
-                  type="email" 
-                  class="form-control @error('email') is-invalid @enderror" 
-                  id="email" 
-                  name="email" 
-                  value="{{ old('email') }}" 
-                  placeholder="メールアドレスを入力">
-                @error('email')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">パスワード</label>
-                <input 
-                  type="password" 
-                  class="form-control @error('password') is-invalid @enderror" 
-                  id="password" 
-                  name="password" 
-                  placeholder="パスワードを入力">
-                @error('password')
-                  <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary">ログイン</button>
-              </div>
-            </form>
-          </div>
-        </div>
+      <!-- バリデーションエラーの表示 -->
+      @if ($errors->any())
+      <div class="alert">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
       </div>
+      @endif
+      <!-- /バリデーションエラーの表示 -->
+
+      <form method="POST" class="login-form" action="{{ route('login') }}">
+        @csrf
+        <div class="form-group">
+          <label class="form-label" for="email">メールアドレス</label>
+          <input class="form-input @error('password') invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" placeholder="メールアドレスを入力">
+          @error('email')
+            <div class="invalid-message">{{ $message }}</div>
+          @enderror
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">パスワード</label>
+          <input class="form-input @error('password') invalid @enderror" id="password" type="password" name="password" value="{{ old('password') }}" placeholder="パスワードを入力">
+          @error('password')
+            <div class="invalid-message">{{ $message }}</div>
+          @enderror
+        </div>
+        <div>
+          <button class="login-btn" type="submit">ログイン</button>
+        </div>
+      </form>
     </div>
-    <!-- /ログインフォーム -->
-  </div>
+  </main>
 </body>
 </html>
