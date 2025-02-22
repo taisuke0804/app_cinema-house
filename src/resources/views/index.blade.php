@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="{{ Vite::asset('resources/images/favicon.png') }}">
+  <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <title>CINEMA-HOUSE</title>
-  @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+  @vite(['resources/css/style.css'])
 </head>
 <body>
-  <div class="container mt-5">
-    <!-- タイトル -->
-    <div class="text-center mb-4">
-      <h1 class="display-4">CINEMA-HOUSE</h1>
-      <p class="lead">ようこそ、映画の世界へ</p>
+  <main class="bg-image">
+    <div class="container top-container">
+      <h1 class="site-title">
+        <a href="{{ route('index')}}">
+          CINEMA-HOUSE
+        </a>
+      </h1>
+      <p>ようこそ、映画の世界へ</p>
+      <a class="btn" href="{{ route('login')}}">ログインページへ</a>
     </div>
-    <!-- /タイトル -->
-
-    <!-- ログインページに遷移するボタン -->
-    <div class="d-flex justify-content-center">
-      <a href="{{ route('login') }}" class="btn btn-primary btn-lg">ログインページへ</a>
-    </div>
-    <!-- /ログインページに遷移するボタン -->
-  </div>
+  </main>
 </body>
 </html>
