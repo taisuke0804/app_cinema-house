@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
 @section('title', 'ユーザートップページ | CINEMA-HOUSE')
 
