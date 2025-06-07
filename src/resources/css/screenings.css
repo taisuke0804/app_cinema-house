@@ -1,0 +1,96 @@
+.sc-section {
+  /* background-color: aqua; */
+  margin-top: 25px;
+  width: 1300px;
+  margin: 25px auto 0;
+  border: solid 1px #eeebeb;
+  border-radius: 10px;
+  box-shadow: 0 1px 1px 1px #e9e6e6;
+  overflow: hidden;
+}
+
+.sc-section h4 {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background-color: #0b5ed7;
+  color: #fff;
+  font-weight: 500;
+}
+
+.sc-show {
+  padding: 16px;
+}
+
+.sc-show .sc-title {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.sc-info {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.sc-show hr {
+  margin: 1.1rem 0;
+  opacity: 0.4;
+  color: inherit;
+}
+
+.seat-info {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 7px;
+}
+
+.reserve-kinds {
+  color: #212529bf;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.row-label {
+  width: 20px;
+  margin-right: 10px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.seats {
+  display: flex;
+  gap: 16px;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  background-color: #198754;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reserve-state {
+  color: #212529bf;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.reserve-button {
+  background-color: #0d6efd;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: auto;
+  opacity: 60%;
+}

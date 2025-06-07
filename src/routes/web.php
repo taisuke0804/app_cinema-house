@@ -32,6 +32,7 @@ Route::controller(UserCalendarController::class)->prefix('user')->name('user.')
         Route::get('screenings/calendar/events', 'events')->name('screenings.calendar.events');
         // 上映スケジュールの詳細ページ
         Route::get('screenings/{screening}', 'show')->name('screenings.show');
+        Route::get('test', 'test');
 });
 
 Route::controller(SeatController::class)->prefix('user')->name('user.')

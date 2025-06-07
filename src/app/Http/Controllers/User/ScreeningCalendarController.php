@@ -58,4 +58,9 @@ class ScreeningCalendarController extends Controller
             'seatRows' => $seatRows,
         ]);
     }
+
+    public function test()
+    {
+        return view('user.screenings.test');
+    }
 }
