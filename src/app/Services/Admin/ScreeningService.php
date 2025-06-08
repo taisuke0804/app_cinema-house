@@ -69,7 +69,7 @@ class ScreeningService
         $screeningId = (int)$screening->id;
         
         $seats = DB::table('seats')
-            ->select('screening_id','user_id', 'row', 'number', 'is_reserved',
+            ->select('id', 'screening_id','user_id', 'row', 'number', 'is_reserved',
             DB::raw("CASE user_id WHEN {$authId} THEN TRUE ELSE FALSE END AS auth_reserved")
             )
             ->where('screening_id', $screeningId)

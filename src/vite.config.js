@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/style.css',
                 'resources/css/screenings.css',
+                'resources/js/screenings.js',
             ],
             refresh: true,
         }),

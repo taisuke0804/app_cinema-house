@@ -3,7 +3,7 @@
 @section('title', 'ユーザートップページ | CINEMA-HOUSE')
 
 @push('styles')
-@vite(['resources/css/screenings.css'])
+@vite(['resources/css/screenings.css', 'resources/js/screenings.js'])
 @endpush
 
 @section('content')
@@ -30,7 +30,16 @@
         <span class="row-label">{{ $row }}</span>
         <div class="seats">
           @foreach ($seats as $seat)
-            <button class="seat">{{ $seat->number }}</button>
+            <button @class(['seat', 
+              'seat-not-reserve' => !$seat->is_reserved, 
+              'seat-reserve' => $seat->is_reserved])
+              data-seat-id="{{ $seat->id }}"
+              data-row="{{ $row }}"
+              data-number="{{ $seat->number }}"
+              @disabled($seat->is_reserved)
+            >
+              {{ $row }}{{ $seat->number }}
+            </button>
           @endforeach
         </div>
       </div>
@@ -38,9 +47,9 @@
 
     <hr>
     <h5 class="seat-info">選択した座席情報</h5>
-    <p class="reserve-state">座席が選択されていません。</p>
+    <p class="reserve-state" id="select-seat">座席が選択されていません。</p>
 
-    <button class="reserve-button">予約する</button>
+    <button class="reserve-button" id="reserve-btn" disabled>予約する</button>
   </div>
 </section>
 
