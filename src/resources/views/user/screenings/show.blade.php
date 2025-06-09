@@ -50,6 +50,23 @@
     <p class="reserve-state" id="select-seat">座席が選択されていません。</p>
 
     <button class="reserve-button" id="reserve-btn" disabled>予約する</button>
+
+    <!-- モーダル -->
+    <div id="modalOverlay" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>座席予約確認</h3>
+          <span class="modal-close" id="closeModalBtn">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p id="modalSeatInfo">選択した座席: なし</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn cancel-btn" id="cancelBtn">キャンセル</button>
+          <button class="btn confirm-btn">予約する</button>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
