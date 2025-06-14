@@ -6,6 +6,7 @@ use App\Models\Screening;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Seat;
+use Illuminate\Support\Facades\DB;
 
 class ScreeningService
 {
@@ -64,31 +65,32 @@ class ScreeningService
     public function getScreeningSeats(Screening $screening, string $guard): array
     {
         $seatRows = [];
-        $authId = Auth::guard('web')->id();
+        $authId = (int)Auth::guard('web')->id();
+        $screeningId = (int)$screening->id;
 
-        foreach (range('A', 'B') as $row) {
-            $seats = [];
-            foreach (range(1, 10) as $number) {
-                $seat = $screening->seats->whereStrict('row', $row)->whereStrict('number', $number)->first();
-                
-                // user側・ログインユーザーが予約済みの座席かどうか
-                if ($seat && $guard === 'web') {
-                    $authReserved = $seat->user_id === $authId ? true : false;
-                } else {
-                    $authReserved = false;
-                }
+        // 上映スケジュールにログインユーザーの予約が含まれるかどうか
+        $authExists = DB::table('seats')
+            ->where('user_id', $authId)
+            ->where('is_reserved', true)
+            ->where('screening_id', $screeningId)
+            ->exists();
+        
+        $seats = DB::table('seats')
+            ->select('id', 'screening_id','user_id', 'row', 'number', 'is_reserved',
+            DB::raw("CASE user_id WHEN {$authId} THEN TRUE ELSE FALSE END AS auth_reserved")
+            )
+            ->where('screening_id', $screeningId)
+            ->orderBy('row')
+            ->orderBy('number')
+            ->get()
+            ->map(function ($seat) use ($authExists) {
+                $seat->auth_exists = $authExists;
+                return $seat;
+            });
 
-                $seats[] = [
-                    'label' => $row . strval($number),
-                    'is_reserved' => $seat->is_reserved ?? false,
-                    'auth_reserved' => $authReserved ?? false,
-                    'row' => $row,
-                    'number' => $number,
-                ];
-            }
-            $seatRows[$row] = $seats;
-        }
-
+        $seats = $seats->groupBy('row'); // 列ごとにグループ化
+        $seatRows = $seats->toArray(); 
+        
         return $seatRows;
     }
 
