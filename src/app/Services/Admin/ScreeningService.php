@@ -67,6 +67,13 @@ class ScreeningService
         $seatRows = [];
         $authId = (int)Auth::guard('web')->id();
         $screeningId = (int)$screening->id;
+
+        // 上映スケジュールにログインユーザーの予約が含まれるかどうか
+        $authExists = DB::table('seats')
+            ->where('user_id', $authId)
+            ->where('is_reserved', true)
+            ->where('screening_id', $screeningId)
+            ->exists();
         
         $seats = DB::table('seats')
             ->select('id', 'screening_id','user_id', 'row', 'number', 'is_reserved',
@@ -76,10 +83,14 @@ class ScreeningService
             ->orderBy('row')
             ->orderBy('number')
             ->get()
-            ->groupBy('row');
+            ->map(function ($seat) use ($authExists) {
+                $seat->auth_exists = $authExists;
+                return $seat;
+            });
 
-        $seatRows = $seats->toArray(); // 列ごとにグループ化
-
+        $seats = $seats->groupBy('row'); // 列ごとにグループ化
+        $seatRows = $seats->toArray(); 
+        
         return $seatRows;
     }
 

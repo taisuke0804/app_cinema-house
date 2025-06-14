@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         selectedSeatText.textContent = `選択した座席: ${row}${number}`;
         modalSeatInfo.textContent = `選択した座席: ${row}${number}`;
+        document.getElementById('modal-row').value = row;
+        document.getElementById('modal-number').value = number;
+
         reserveButton.disabled = false;
       }
 
