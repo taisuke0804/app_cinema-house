@@ -45,6 +45,18 @@ class DeploymentSeeder extends Seeder
                 'genre' => 3,
             ]);
 
+            $movie4 = Movie::factory()->create([
+                'title' => 'となりのトトロ',
+                'description' => '物語の舞台は昭和30年代。大学で考古学を研究する学者のお父さん、小学6年生のサツキ、4歳のメイの3人が引っ越してきたのは、豊かな自然と美しい四季があふれる田舎の、「お化け屋敷」のような一軒家。しかし本当に出たんです…… トトロが。',
+                'genre' => 99,
+            ]);
+
+            $movie5 = Movie::factory()->create([
+                'title' => '君の名は。',
+                'description' => '東京に暮らす少年・瀧（たき）と飛騨地方の山深い田舎町で暮らす少女・三葉（みつは）の身に起きた「入れ替わり」という謎の現象と、1200年ぶりに地球に接近するという「ティアマト彗星」をめぐる出来事を描く。',
+                'genre' => 99,
+            ]);
+
             $now = \Carbon\Carbon::now();
 
             $tommorow = $now->copy()->addDays(1);
@@ -68,9 +80,23 @@ class DeploymentSeeder extends Seeder
                 'end_time' => $yesterday->copy()->setTime(17, 0, 0),
             ]);
 
+            $daysLater10 = $now->copy()->addDays(10);
+            $screening4 = Screening::factory()->create([
+                'movie_id' => $movie4->id,
+                'start_time' => $daysLater10->copy()->setTime(9, 0, 0),
+                'end_time' => $daysLater10->copy()->setTime(11, 0, 0),
+            ]);
+
+            $daysLater20 = $now->copy()->addDays(20);
+            $screening5 = Screening::factory()->create([
+                'movie_id' => $movie5->id,
+                'start_time' => $daysLater20->copy()->setTime(9, 0, 0),
+                'end_time' => $daysLater20->copy()->setTime(11, 0, 0),
+            ]);
+
             $rows = ['A', 'B']; // 行
             $seatsPerRow = 10;       // 1行あたりの席数
-            $screening_ids = [$screening1->id, $screening2->id, $screening3->id];
+            $screening_ids = [$screening1->id, $screening2->id, $screening3->id, $screening4->id, $screening5->id];
 
             foreach ($screening_ids as $screening_id) {
                 $seats = [];
