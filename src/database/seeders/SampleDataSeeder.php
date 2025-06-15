@@ -36,13 +36,21 @@ class SampleDataSeeder extends Seeder
             'end_time' => $yesterday->clone()->setTime(12, 0, 0),
         ]);
 
-        $seat = Seat::factory()->create([
-            'screening_id' => $screening->id,
-            'user_id' => $user->id,
-            'row' => 'A',
-            'number' => 1,
-            'is_reserved' => true,
-        ]);
+        foreach (range('A', 'B') as $row) {
+            foreach (range(1, 10) as $number) {
+                $seat = Seat::factory()->create([
+                    'screening_id' => $screening->id,
+                    'user_id' => NULL,
+                    'row' => $row,
+                    'number' => $number,
+                    'is_reserved' => false,
+                ]);
+            }
+        }
+        $seatSample1 = Seat::where('screening_id', $screening->id)->where('row', 'A')->where('number', 1)->first();
+        $seatSample1->user_id = $user->id;
+        $seatSample1->is_reserved = true;
+        $seatSample1->save();
 
         $movie = Movie::factory()->create([
             'title' => 'スターウォーズ エピソード5/帝国の逆襲',
@@ -58,13 +66,21 @@ class SampleDataSeeder extends Seeder
             'end_time' => $today->clone()->setTime(22, 0, 0),
         ]);
 
-        $seat = Seat::factory()->create([
-            'screening_id' => $screening->id,
-            'user_id' => $user->id,
-            'row' => 'B',
-            'number' => 2,
-            'is_reserved' => true,
-        ]);
+        foreach (range('A', 'B') as $row) {
+            foreach (range(1, 10) as $number) {
+                $seat = Seat::factory()->create([
+                    'screening_id' => $screening->id,
+                    'user_id' => NULL,
+                    'row' => $row,
+                    'number' => $number,
+                    'is_reserved' => false,
+                ]);
+            }
+        }
+        $seatSample2 = Seat::where('screening_id', $screening->id)->where('row', 'B')->where('number', 2)->first();
+        $seatSample2->user_id = $user->id;
+        $seatSample2->is_reserved = true;
+        $seatSample2->save();
 
         $movie = Movie::factory()->create([
             'title' => 'スターウォーズ エピソード6/ジェダイの帰還',
@@ -80,12 +96,20 @@ class SampleDataSeeder extends Seeder
             'end_time' => $tomorrow->clone()->setTime(12, 0, 0),
         ]);
 
-        $seat = Seat::factory()->create([
-            'screening_id' => $screening->id,
-            'user_id' => null,
-            'row' => 'A',
-            'number' => 3,
-            'is_reserved' => false,
-        ]);
+        foreach (range('A', 'B') as $row) {
+            foreach (range(1, 10) as $number) {
+                $seat = Seat::factory()->create([
+                    'screening_id' => $screening->id,
+                    'user_id' => NULL,
+                    'row' => $row,
+                    'number' => $number,
+                    'is_reserved' => false,
+                ]);
+            }
+        }
+        $seatSample3 = Seat::where('screening_id', $screening->id)->where('row', 'A')->where('number', 3)->first();
+        $seatSample3->user_id = $user->id;
+        $seatSample3->is_reserved = false;
+        $seatSample3->save();
     }
 }

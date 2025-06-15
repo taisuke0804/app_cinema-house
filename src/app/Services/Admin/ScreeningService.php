@@ -77,7 +77,7 @@ class ScreeningService
         
         $seats = DB::table('seats')
             ->select('id', 'screening_id','user_id', 'row', 'number', 'is_reserved',
-            DB::raw("CASE user_id WHEN {$authId} THEN TRUE ELSE FALSE END AS auth_reserved")
+            DB::raw("CASE WHEN is_reserved = FALSE THEN FALSE WHEN user_id = {$authId} THEN TRUE ELSE FALSE END AS auth_reserved")
             )
             ->where('screening_id', $screeningId)
             ->orderBy('row')
