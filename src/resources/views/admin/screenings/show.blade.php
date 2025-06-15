@@ -2,42 +2,58 @@
 
 @section('title', '上映スケジュール詳細 | CINEMA-HOUSE')
 
+@push('styles')
+@vite(['resources/css/screenings.css'])
+@endpush
+
 @section('content')
 
-<div class="card">
-  <div class="card-header bg-primary text-white">
-    上映スケジュール詳細
-  </div>
+<section class="sc-section">
+  <h4>上映スケジュール詳細</h4>
 
-  <div class="card-body">
-    <h5 class="card-title fs-3">映画タイトル: 『 {{ $screening->movie->title }} 』</h5>
-    <p class="card-text">
+  <div class="sc-show">
+    <h5 class="sc-title"><strong>映画タイトル:</strong> 『 {{ $screening->movie->title }} 』</h5>
+    <p class="sc-info">
       <strong>ジャンル:</strong> {{ $screening->movie->genre->getLabel() }}<br>
       <strong>上映日:</strong> {{ $screening->start_time->format('Y年m月d日') }}<br>
       <strong>上映開始時刻:</strong> {{ $screening->start_time->format('H:i') }}<br>
       <strong>上映終了時刻:</strong> {{ $screening->end_time->format('H:i') }}
     </p>
 
-    <!-- 席予約状況 -->
     <hr>
-    <h5>座席予約状況</h5>
-    <p class="text-muted">緑色: 空き / 灰色: 予約済み</p>
-    <div class="d-flex flex-column align-items-start">
+    @if ($screening->start_time->isPast())
+      <div class="caution-state">
+        この上映スケジュールは終了しました。
+      </div>
+    @else
+
+      <h5 class="seat-info">座席予約状況</h5>
+      <p class="reserve-kinds">緑色: 空き / 灰色: 他人の予約 / 黄色: 自分の予約 / 青色: 選択中</p>
+
       @foreach ($seatRows as $row => $seats)
-        <div class="d-flex align-items-center mb-2">
-          <span class="me-2">{{ $row }}</span>
-          <div class="d-flex">
+        <div class="seat-row">
+          <span class="row-label">{{ $row }}</span>
+          <div class="seats">
             @foreach ($seats as $seat)
-              <div class="seat {{ $seat['is_reserved'] ? 'bg-secondary' : 'bg-success' }} text-white me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; font-size: 1rem; border-radius: 4px;">
-                {{ $seat['label'] }}
-              </div>
+              <button @class(['seat', 
+                'seat-not-reserve' => !$seat->is_reserved, 
+                'seat-reserve' => $seat->is_reserved,
+                'auth-reserve' => $seat->auth_reserved])
+                data-seat-id="{{ $seat->id }}"
+                data-row="{{ $row }}"
+                data-number="{{ $seat->number }}"
+                disabled
+              >
+                {{ $row }}{{ $seat->number }}
+              </button>
             @endforeach
           </div>
         </div>
       @endforeach
-    </div>
+
+    @endif
 
   </div>
-</div>
+</section>
 
 @endsection
