@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Seat;
 use Illuminate\Support\Facades\DB;
 
+use function Laravel\Prompts\form;
+
 class ScreeningService
 {
     /**
@@ -15,7 +17,30 @@ class ScreeningService
      */
     public function storeScreening(array $validated): void
     {
-        Screening::create($validated);
+        try {
+            DB::beginTransaction();
+            $screening = Screening::create($validated);
+    
+            $seats = [];
+            foreach (range('A', 'B') as $row) {
+                foreach (range(1, 10) as $number) {
+                    $seats[] = [
+                        'screening_id' => $screening->id,
+                        'row' => $row,
+                        'number' => $number,
+                        'is_reserved' => false,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+            }
+            Seat::insert($seats); // 一括挿入で座席を生成
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack(); 
+            throw $e; 
+        }
     }
 
     /**
