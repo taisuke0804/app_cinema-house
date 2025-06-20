@@ -111,5 +111,35 @@ class SampleDataSeeder extends Seeder
         $seatSample3->user_id = $user->id;
         $seatSample3->is_reserved = false;
         $seatSample3->save();
+
+        $movie = Movie::factory()->create([
+            'title' => 'プロジェクトA',
+            'description' => 'ジャッキー・チェン主演のアクション映画。20世紀初頭の香港。海賊の撃退をドラゴンたち水上警察が任せられるもうまくいかない。おかげでライバルがいる陸上警察に吸収。しかし友情が芽生え、協力して海賊退治へ乗り出す。',
+            'genre' => 2,
+        ]);
+
+        $before15Days = Carbon::now()->subDays(15);
+
+        $screening = Screening::factory()->create([
+            'movie_id' => $movie->id,
+            'start_time' => $before15Days->clone()->setTime(10, 0, 0),
+            'end_time' => $before15Days->clone()->setTime(12, 0, 0),
+        ]);
+
+        foreach (range('A', 'B') as $row) {
+            foreach (range(1, 10) as $number) {
+                $seat = Seat::factory()->create([
+                    'screening_id' => $screening->id,
+                    'user_id' => NULL,
+                    'row' => $row,
+                    'number' => $number,
+                    'is_reserved' => false,
+                ]);
+            }
+        }
+        $seatSample4 = Seat::where('screening_id', $screening->id)->where('row', 'B')->where('number', 5)->first();
+        $seatSample4->user_id = $user->id;
+        $seatSample4->is_reserved = false;
+        $seatSample4->save();
     }
 }

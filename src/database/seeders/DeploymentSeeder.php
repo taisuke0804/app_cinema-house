@@ -57,6 +57,12 @@ class DeploymentSeeder extends Seeder
                 'genre' => 99,
             ]);
 
+            $movie6 = Movie::factory()->create([
+                'title' => 'ターミネーター2',
+                'description' => '最初のターミネーター出現から10年後。サラ・コナーの息子ジョンは少年に成長。ジョンは、近未来に人類抵抗軍のリーダーだ。機械軍はジョンを少年のうちに殺すため、新しいターミネーターを送り込む。ある日ロサンゼルスに2体のターミネーターが未来から送り込まれる。息子を守るために、サラの死闘が始まる。だが、残忍非道なターミネーターに立ち向かうサラとジョン母子に、強い味方が現れる。いかなる犠牲を払ってもジョンを守れと厳命を受け、人類抵抗軍によって送り込まれた戦士だ。未来への戦いが、いま始まる……',
+                'genre' => 99,
+            ]);
+
             $now = \Carbon\Carbon::now();
 
             $tommorow = $now->copy()->addDays(1);
@@ -94,9 +100,16 @@ class DeploymentSeeder extends Seeder
                 'end_time' => $daysLater20->copy()->setTime(11, 0, 0),
             ]);
 
+            $daysAgo = $now->copy()->subDays(15);
+            $screening6 = Screening::factory()->create([
+                'movie_id' => $movie6->id,
+                'start_time' => $daysAgo->copy()->setTime(9, 0, 0),
+                'end_time' => $daysAgo->copy()->setTime(11, 0, 0),
+            ]);
+
             $rows = ['A', 'B']; // 行
             $seatsPerRow = 10;       // 1行あたりの席数
-            $screening_ids = [$screening1->id, $screening2->id, $screening3->id, $screening4->id, $screening5->id];
+            $screening_ids = [$screening1->id, $screening2->id, $screening3->id, $screening4->id, $screening5->id, $screening6->id];
 
             foreach ($screening_ids as $screening_id) {
                 $seats = [];
