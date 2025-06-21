@@ -13,12 +13,21 @@
       <h5>ユーザーへの一斉通知メール送信</h5>
     </div>
     <div class="card-body">
-      <form id="bulkMailForm" method="POST" action="">
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
+      <form id="bulkMailForm" method="POST" action="{{ route('admin.notifications.send') }}">
         @csrf
 
         <div class="mb-3">
           <label for="subject" class="form-label">件名</label>
-          <input type="text" name="subject" id="subject" class="form-control" placeholder="（例）新作映画のお知らせ">
+          <input type="text" name="subject" id="subject" class="form-control" value="{{ old('subject') }}" placeholder="（例）新作映画のお知らせ">
         </div>
 
         <div class="mb-3">
