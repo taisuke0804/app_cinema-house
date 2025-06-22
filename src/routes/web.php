@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\ScreeningCalendarController as ScreeningCalendarController;
 use App\Http\Controllers\User\ScreeningCalendarController as UserCalendarController;
 use App\Http\Controllers\User\SeatController;
+use App\Http\Controllers\Admin\AdminDashboardController;
 
 Route::get('/', function () {
     return view('index');
@@ -56,11 +57,12 @@ Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('adm
 Route::get('/admin/login/second', [AdminLoginController::class, 'showSecondLogin'])->name('admin.secondLogin');
 Route::post('/admin/login/secondAuth', [AdminLoginController::class, 'secondAuth'])->name('admin.secondAuth');
 
-Route::get('/admin', function () {
-    return view('admin.index');
-})->middleware('auth:admin')->name('admin.index');
-
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::controller(AdminDashboardController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/notifications/send', 'sendNotification')->name('notifications.send');
+    });
+
     Route::controller(MovieController::class)->group(function () {
         Route::get('movies/', 'index')->name('movies.index');
         Route::get('movies/create', 'create')->name('movies.create');

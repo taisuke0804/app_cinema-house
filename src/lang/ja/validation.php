@@ -195,6 +195,8 @@ return [
         'title' => 'タイトル',
         'genre' => 'ジャンル',
         'description' => '説明文',
+        'subject' => '件名',
+        'message' => '本文',
     ],
 
 ];
