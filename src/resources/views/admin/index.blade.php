@@ -13,6 +13,14 @@
       <h5>ユーザーへの一斉通知メール送信</h5>
     </div>
     <div class="card-body">
+      <!-- 送信完了メッセージ -->
+      @if (session('status'))
+        <div class="alert alert-success">
+          {{ session('status') }}
+        </div>
+      @endif
+
+      <!-- エラーメッセージ -->
       @if ($errors->any())
         <div class="alert alert-danger">
           <ul class="mb-0">
@@ -22,6 +30,7 @@
           </ul>
         </div>
       @endif
+
       <form id="bulkMailForm" method="POST" action="{{ route('admin.notifications.send') }}">
         @csrf
 

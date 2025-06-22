@@ -15,8 +15,13 @@ class AdminDashboardController extends Controller
         return view('admin.index');
     }
 
+    /**
+     * ユーザーへ管理者からメールを一斉送信
+     */
     public function sendNotification(BulkNotificationRequest $request, BulkNotificationService $service)
     {
         $service->dispatchNotificationJob($request->subject, $request->message);
+        
+        return back()->with('status', '通知メールを送信しました。');
     }
 }

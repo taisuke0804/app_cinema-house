@@ -2,6 +2,9 @@
 
 namespace App\Services\Admin;
 
+use App\Models\User;
+use App\Jobs\SendBulkNotificationMail;
+
 class BulkNotificationService
 {
     /**
@@ -9,6 +12,8 @@ class BulkNotificationService
      */
     public function dispatchNotificationJob(string $subject, string $message): void
     {
-        dump($subject);
+        $userIds = User::pluck('id')->toArray(); // 全ユーザーのID取得
+
+        SendBulkNotificationMail::dispatch($userIds, $subject, $message);
     }
 }
