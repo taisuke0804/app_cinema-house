@@ -29,6 +29,10 @@
             <a href="{{ route('admin.screenings.calendar.index') }}" class="nav-link text-light ms-4">
               上映カレンダー
             </a>
+            <!-- ユーザー管理画面 -->
+            <a href="{{ route('admin.users.index') }}" class="nav-link text-light ms-4">
+              ユーザー管理
+            </a>
         </div>
 
         <!-- ヘッダーの右側部分 -->
