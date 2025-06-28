@@ -21,4 +21,9 @@ class AdminUserController extends Controller
     {
         return view('admin.users.create');
     }
+
+    public function store()
+    {
+        dump('store');
+    }
 }
