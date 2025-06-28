@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ScreeningCalendarController as ScreeningCalendarC
 use App\Http\Controllers\User\ScreeningCalendarController as UserCalendarController;
 use App\Http\Controllers\User\SeatController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminUserController;
 
 Route::get('/', function () {
     return view('index');
@@ -77,6 +78,14 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('screenings/{screening}', 'show')->name('screenings.show');
         Route::get('screening/create/{movie_id}', 'create')->name('screenings.create');
         Route::post('screening/store', 'store')->name('screenings.store');
+    });
+
+    Route::controller(AdminUserController::class)->group(function () {
+        Route::get('users', 'index')->name('users.index');
+        Route::get('users/create', 'create')->name('users.create');
+        Route::post('users/store', 'store')->name('users.store');
+        Route::get('users/{id}', 'show')->name('users.show');
+        Route::delete('users/{id}/destroy', 'destroy')->name('users.destroy');
     });
 });
 // ------------------------------------------------------------------------------------------------
