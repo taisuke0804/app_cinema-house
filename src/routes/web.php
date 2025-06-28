@@ -84,6 +84,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
         Route::get('users', 'index')->name('users.index');
         Route::get('users/create', 'create')->name('users.create');
         Route::post('users/store', 'store')->name('users.store');
+        Route::get('users/{id}', 'show')->name('users.show');
+        Route::delete('users/{id}/destroy', 'destroy')->name('users.destroy');
     });
 });
 // ------------------------------------------------------------------------------------------------

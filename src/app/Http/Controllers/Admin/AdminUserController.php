@@ -34,4 +34,19 @@ class AdminUserController extends Controller
             ->route('admin.users.index')
             ->with('status', 'ユーザーを登録しました。');
     }
+
+    public function show($userId)
+    {
+        $user = User::findOrFail($userId);
+        return view('admin.users.show')->with(['user' => $user]);
+    }
+
+    public function destroy($userId)
+    {
+        $user = User::findOrFail($userId);
+        $user->delete();
+        return redirect()
+            ->route('admin.users.index')
+            ->with('status', 'ユーザーを削除しました。');
+    }
 }
