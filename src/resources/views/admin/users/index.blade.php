@@ -7,7 +7,7 @@
   <div class="d-flex justify-content-between align-items-start">
     <h2 class="mb-4">ユーザー一覧</h2>
   
-    <a href="" class="btn btn-info btn-sm" role="button">
+    <a href="{{ route('admin.users.create') }}" class="btn btn-info btn-sm" role="button">
       ユーザー新規登録
     </a>
   </div>
